@@ -113,8 +113,8 @@ public class ActionBarCommand extends BaseCommand {
         String name = args[args.length - 1];
 
         instance.getManager().saveBar(new ActionBar(player.getUniqueId(), name, message));
-        player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved this ActionBar with " +
-                "the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GREEN + ".");
+        player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
+                "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
 
     @Subcommand("delete")
@@ -122,8 +122,8 @@ public class ActionBarCommand extends BaseCommand {
     @CommandPermission("actionbar.delete")
     public void onActionBarDelete(CommandSender sender, String name) {
         if (instance.getManager().deleteBar(name)) {
-            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GOLD + "Successfully deleted the ActionBar with the " +
-                    "name " + ChatColor.RED + "\"" + name + "\"" + ChatColor.GOLD + ".");
+            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GOLD + "Successfully deleted " + ChatColor.GRAY +
+                    "the ActionBar with the name " + ChatColor.RED + "\"" + name + "\"" + ChatColor.GRAY + ".");
         } else {
             sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "No such ActionBar exists!");
             if (sender instanceof Player player)
@@ -145,8 +145,8 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         instance.getManager().saveBar(new ActionBar(uuid, name, instance.getHandler().getRecents().get(uuid)));
-        player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved your recent ActionBar with " +
-                "the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GREEN + ".");
+        player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
+                "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
 
     // --------------------------------------------------------------------------------
@@ -195,7 +195,8 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         // SEND FEEDBACK MESSAGE
-        sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "ActionBar message successfully sent.");
+        sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
+                "successfully sent" + ChatColor.GRAY  + ".");
     }
 
 }

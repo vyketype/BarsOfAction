@@ -16,15 +16,15 @@ public class BarsOfAction extends JavaPlugin {
     // SINGLETON PATTERN
     @Getter private static BarsOfAction instance;
 
-    public static String PREFIX = "" + ChatColor.of("#2a4858") + ChatColor.BOLD + "A" +
-            ChatColor.of("#123c71") + ChatColor.BOLD + "C" +
-            ChatColor.of("#007286") + ChatColor.BOLD + "T" +
-            ChatColor.of("#008896") + ChatColor.BOLD + "I" +
-            ChatColor.of("#009f9e") + ChatColor.BOLD + "O" +
-            ChatColor.of("#00b5a0") + ChatColor.BOLD + "N" +
-            ChatColor.of("#00cb9a") + ChatColor.BOLD + "B" +
-            ChatColor.of("#00e08d") + ChatColor.BOLD + "A" +
-            ChatColor.of("#4ff47a") + ChatColor.BOLD + "R" +
+    public static String PREFIX = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
+            ChatColor.of("#6db091") + ChatColor.BOLD + "C" +
+            ChatColor.of("#6ab297") + ChatColor.BOLD + "T" +
+            ChatColor.of("#66b39d") + ChatColor.BOLD + "I" +
+            ChatColor.of("#63b5a3") + ChatColor.BOLD + "O" +
+            ChatColor.of("#60b7a8") + ChatColor.BOLD + "N" +
+            ChatColor.of("#5eb8ae") + ChatColor.BOLD + "B" +
+            ChatColor.of("#5cbab4") + ChatColor.BOLD + "A" +
+            ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
             ChatColor.RESET + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
 
     @Getter private Config config;
