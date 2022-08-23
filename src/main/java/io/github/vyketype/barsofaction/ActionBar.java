@@ -39,7 +39,7 @@ public record ActionBar(UUID creator, String name, String content) {
     @Override
     public String toString() {
         // > template : by vPrototype_
-        return ChatColor.DARK_GRAY + "> " + ChatColor.LIGHT_PURPLE + name + ChatColor.WHITE + " : " +
+        return ChatColor.DARK_GRAY + "> " + ChatColor.LIGHT_PURPLE + name + ChatColor.WHITE + " : by " +
                 ChatColor.GRAY + Bukkit.getOfflinePlayer(creator).getName();
     }
 

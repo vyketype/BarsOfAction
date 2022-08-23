@@ -13,10 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @CommandAlias("actionbar|ab")
-@CommandPermission("actionbar.use")
 public class ActionBarCommand extends BaseCommand {
 
     private static final BarsOfAction instance = BarsOfAction.getInstance();
@@ -25,6 +25,24 @@ public class ActionBarCommand extends BaseCommand {
     @Default
     public void onActionBar(CommandHelp commandHelp) {
         commandHelp.showHelp();
+    }
+
+    @Subcommand("permissions|perms")
+    @Description("List all permissions for this plugin. /ab perms")
+    public void onActionBarPerms(CommandSender sender) {
+        sender.sendMessage(BarsOfAction.PREFIX + "Getting the permissions for this plugin...");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.broadcast" +
+                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab broadcast");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.delete" +
+                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab delete");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.save" +
+                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab save" + ChatColor.WHITE + " and " +
+                ChatColor.AQUA + "/ab saverecent");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.send.self" +
+                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to yourself");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.send.others" +
+                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to others");
+        sender.sendMessage();
     }
 
     @Subcommand("list")
@@ -46,6 +64,7 @@ public class ActionBarCommand extends BaseCommand {
 
     @Subcommand("broadcast")
     @Description("Broadcast a custom ActionBar. /ab broadcast <message> OR ALTERNATIVELY TO RETRIEVE A SAVED ACTIONBAR: /ab broadcast -get <savename>")
+    @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
         handleSending(player, strArgs, null);
     }
@@ -65,12 +84,29 @@ public class ActionBarCommand extends BaseCommand {
             return;
         }
 
+        // CHECK PERMISSION FOR OTHERS
+        if (!player.hasPermission("actionbar.send.others") && !Objects.equals(target.getName(), player.getName())) {
+            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "You do not have the permission to send " +
+                    "ActionBar messages to others!");
+            player.playSound(player.getLocation(), "entity.experience_orb.pickup", 100, 0.5F);
+            return;
+        }
+
+        // CHECK PERMISSION FOR SELF
+        if (!player.hasPermission("actionbar.send.self") && Objects.equals(target.getName(), player.getName())) {
+            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "You do not have the permission to send " +
+                    "ActionBar messages to yourself!");
+            player.playSound(player.getLocation(), "entity.experience_orb.pickup", 100, 0.5F);
+            return;
+        }
+
         String[] newArgs = strArgs.split(" ", 2);
         handleSending(player, newArgs[1], target.getPlayer());
     }
 
     @Subcommand("save")
     @Description("Save a custom ActionBar. /ab save <message> <name>")
+    @CommandPermission("actionbar.save")
     public void onActionBarSave(Player player, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String message = StringUtils.join(args, " ", 0, args.length - 1);
@@ -83,6 +119,7 @@ public class ActionBarCommand extends BaseCommand {
 
     @Subcommand("delete")
     @Description("Delete a saved ActionBar. /ab delete <name>")
+    @CommandPermission("actionbar.delete")
     public void onActionBarDelete(CommandSender sender, String name) {
         if (instance.getManager().deleteBar(name)) {
             sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GOLD + "Successfully deleted the ActionBar with the " +
@@ -96,6 +133,7 @@ public class ActionBarCommand extends BaseCommand {
 
     @Subcommand("saverecent")
     @Description("Save the most recent ActionBar you sent. /ab saverecent <name>")
+    @CommandPermission("actionbar.save")
     public void onActionBarSaveRecent(Player player, String name) {
         UUID uuid = player.getUniqueId();
 
@@ -140,7 +178,7 @@ public class ActionBarCommand extends BaseCommand {
         // ADD TO HANDLER
         instance.getHandler().getRecents().put(sender.getUniqueId(), content);
 
-        ActionBar actionBar = new ActionBar(sender.getUniqueId(), "nameDoesntMatter",
+        ActionBar actionBar = new ActionBar(sender.getUniqueId(), "nameDoesNotMatter",
                 ChatColor.translateAlternateColorCodes('&', content));
 
         // IF TARGET IS NULL, DO BROADCAST
