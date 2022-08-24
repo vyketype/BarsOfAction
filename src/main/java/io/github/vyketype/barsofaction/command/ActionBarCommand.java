@@ -46,8 +46,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("list")
-    @Description("List all saved ActionBars. /ab list")
-    public void onActionBarList(CommandSender sender) {
+    @Description("List all saved ActionBars. /ab list [page]")
+    public void onActionBarList(CommandSender sender, int page) {
         // CHECKING IF SAVED BARS EXIST AT ALL
         if (instance.getManager().getSavedBars().isEmpty()) {
             sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "There are no saved ActionBars.");
@@ -55,6 +55,8 @@ public class ActionBarCommand extends BaseCommand {
                 player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
             return;
         }
+
+        // TODO: pages
 
         sender.sendMessage(BarsOfAction.PREFIX + "Retrieving all saved ActionBars...");
         for (ActionBar bar : instance.getManager().getSavedBars()) {
@@ -112,6 +114,8 @@ public class ActionBarCommand extends BaseCommand {
         String message = StringUtils.join(args, " ", 0, args.length - 1);
         String name = args[args.length - 1];
 
+        if (!checkIfExists(player, name)) return;
+
         instance.getManager().saveBar(new ActionBar(player.getUniqueId(), name, message));
         player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
@@ -144,12 +148,28 @@ public class ActionBarCommand extends BaseCommand {
             return;
         }
 
+        if (!checkIfExists(player, name)) return;
+
         instance.getManager().saveBar(new ActionBar(uuid, name, instance.getHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
 
     // --------------------------------------------------------------------------------
+
+    private boolean checkIfExists(Player player, String name) {
+        // CHECKING IF AN ACTIONBAR WITH THAT NAME EXISTS
+        // IF IT EXISTS, ONLY THE CREATOR PLAYER CAN OVERWRITE ITS SAVE
+        @Nullable ActionBar maybeExists = instance.getManager().getBar(name);
+
+        if (maybeExists != null && maybeExists.creator() == player.getUniqueId()) {
+            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "An ActionBar with that name already exists!");
+            player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            return false;
+        }
+
+        return true;
+    }
 
     public void handleSending(Player sender, String strArgs, @Nullable Player target) {
         String[] args = StringUtils.split(strArgs, " ", -1);
