@@ -41,15 +41,15 @@ public class BarsOfAction extends JavaPlugin {
             bcm.enableUnstableAPI("help");
             bcm.enableUnstableAPI("brigadier");
 
-            getLogger().info("Successfully loaded BarsOfAction v1.1-SNAPSHOT by vyketype");
+            getLogger().info("Successfully loaded BarsOfAction v1.1 by vyketype");
         } catch (Throwable t) {
             t.printStackTrace();
-            getLogger().info("Failed to load BarsOfAction v1.1-SNAPSHOT");
+            getLogger().info("Failed to load BarsOfAction v1.1");
         }
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Disabled BarsOfAction v1.1-SNAPSHOT");
+        getLogger().info("Disabled BarsOfAction v1.1");
     }
 }
