@@ -13,9 +13,6 @@ import java.io.File;
 
 public class BarsOfAction extends JavaPlugin {
 
-    // SINGLETON PATTERN
-    @Getter private static BarsOfAction instance;
-
     public static String PREFIX = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
             ChatColor.of("#6db091") + ChatColor.BOLD + "C" +
             ChatColor.of("#6ab297") + ChatColor.BOLD + "T" +
@@ -34,15 +31,13 @@ public class BarsOfAction extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            instance = this;
-
-            config = new Config(new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"), "savedbars.yml");
-            manager = new FileManager();
+            config = new Config(this, new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"), "savedbars.yml");
+            manager = new FileManager(this);
             handler = new SaveRecentHandler();
 
             // Would have done in a separate class if there was more than one command...
             BukkitCommandManager bcm = new BukkitCommandManager(this);
-            bcm.registerCommand(new ActionBarCommand());
+            bcm.registerCommand(new ActionBarCommand(this));
             bcm.enableUnstableAPI("help");
             bcm.enableUnstableAPI("brigadier");
 
@@ -55,8 +50,6 @@ public class BarsOfAction extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        instance = null;
-
         getLogger().info("Disabled BarsOfAction v1.1-SNAPSHOT");
     }
 }

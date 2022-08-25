@@ -11,16 +11,20 @@ import java.util.*;
  */
 public class FileManager {
 
-    private static final BarsOfAction instance = BarsOfAction.getInstance();
+    private final BarsOfAction plugin;
+
+    public FileManager(BarsOfAction plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Saves the ActionBar in savedbars.yml
      * @param bar ActionBar to be saved
      */
     public void saveBar(ActionBar bar) {
-        instance.getConfig().set("actionBars." + bar.name() + ".creator", bar.creator().toString());
-        instance.getConfig().set("actionBars." + bar.name() + ".content", bar.content());
-        instance.getConfig().save();
+        plugin.getConfig().set("actionBars." + bar.name() + ".creator", bar.creator().toString());
+        plugin.getConfig().set("actionBars." + bar.name() + ".content", bar.content());
+        plugin.getConfig().save();
     }
 
     /**
@@ -29,9 +33,9 @@ public class FileManager {
      * @return true if the operation was successful
      */
     public boolean deleteBar(String name) {
-        if (instance.getConfig().getConfigurationSection("actionBars." + name) == null) return false;
-        instance.getConfig().set("actionBars." + name, null);
-        instance.getConfig().save();
+        if (plugin.getConfig().getConfigurationSection("actionBars." + name) == null) return false;
+        plugin.getConfig().set("actionBars." + name, null);
+        plugin.getConfig().save();
         return true;
     }
 
@@ -41,11 +45,11 @@ public class FileManager {
      * @return retrieved ActionBar or null if none exists
      */
     public @Nullable ActionBar getBar(String name) {
-        if (instance.getConfig().getConfigurationSection("actionBars." + name) == null) return null;
+        if (plugin.getConfig().getConfigurationSection("actionBars." + name) == null) return null;
         return new ActionBar(
-                UUID.fromString(instance.getConfig().getString("actionBars." + name + ".creator")),
+                UUID.fromString(plugin.getConfig().getString("actionBars." + name + ".creator")),
                 name,
-                instance.getConfig().getString("actionBars." + name + ".content")
+                plugin.getConfig().getString("actionBars." + name + ".content")
         );
     }
 
@@ -56,7 +60,7 @@ public class FileManager {
     public List<ActionBar> getSavedBars() {
         List<ActionBar> list = new ArrayList<>();
         Set<String> actionBars = Objects.requireNonNull(
-                instance.getConfig().getConfigurationSection("actionBars")
+                plugin.getConfig().getConfigurationSection("actionBars")
         ).getKeys(false);
 
         for (String name : actionBars) {
