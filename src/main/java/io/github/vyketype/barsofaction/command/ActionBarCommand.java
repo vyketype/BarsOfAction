@@ -47,7 +47,7 @@ public class ActionBarCommand extends BaseCommand {
 
     @Subcommand("list")
     @Description("List all saved ActionBars. /ab list [page]")
-    public void onActionBarList(CommandSender sender, int page) {
+    public void onActionBarList(CommandSender sender, @Optional Integer page) {
         // CHECKING IF SAVED BARS EXIST AT ALL
         if (instance.getManager().getSavedBars().isEmpty()) {
             sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "There are no saved ActionBars.");
@@ -56,12 +56,25 @@ public class ActionBarCommand extends BaseCommand {
             return;
         }
 
-        // TODO: pages
-
-        sender.sendMessage(BarsOfAction.PREFIX + "Retrieving all saved ActionBars...");
-        for (ActionBar bar : instance.getManager().getSavedBars()) {
-            sender.sendMessage(bar.toString());
+        // CHECKING IF NO PAGE ARGUMENT IS GIVEN
+        if (page == null) {
+            showListPage(sender, 1);
+            return;
         }
+
+        // CHECKING IF THE PAGE EXISTS
+        int size = instance.getManager().getSavedBars().size();
+        int pages = (int) Math.ceil(size / 7.0);
+
+        if (page > pages || page < 1) {
+            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "This page does not exist!");
+            if (sender instanceof Player player)
+                player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            return;
+        }
+
+        int p = page;
+        showListPage(sender, p);
     }
 
     @Subcommand("broadcast")
@@ -169,6 +182,19 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         return true;
+    }
+
+    public void showListPage(CommandSender sender, int page) {
+        // EACH PAGE WILL HAVE 7 ENTRIES
+        int size = instance.getManager().getSavedBars().size();
+        int pages = (int) Math.ceil(size / 7.0);
+        int limit = Math.min(7 * page, size);
+
+        sender.sendMessage(BarsOfAction.PREFIX + "Retrieving saved ActionBars...");
+        for (int i = (page - 1) * 7 + 1; i <= limit; i++) {
+            sender.sendMessage(instance.getManager().getSavedBars().get(i - 1).toString());
+        }
+        sender.sendMessage(BarsOfAction.PREFIX + "Page " + ChatColor.GREEN + page + ChatColor.GRAY + "/" + pages);
     }
 
     public void handleSending(Player sender, String strArgs, @Nullable Player target) {
