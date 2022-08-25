@@ -5,6 +5,7 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import io.github.vyketype.barsofaction.ActionBar;
 import io.github.vyketype.barsofaction.BarsOfAction;
+import io.github.vyketype.barsofaction.util.ErrorUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -50,9 +51,7 @@ public class ActionBarCommand extends BaseCommand {
     public void onActionBarList(CommandSender sender, @Optional Integer page) {
         // CHECKING IF SAVED BARS EXIST AT ALL
         if (instance.getManager().getSavedBars().isEmpty()) {
-            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "There are no saved ActionBars.");
-            if (sender instanceof Player player)
-                player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            ErrorUtil.error(sender, "There are no saved ActionBars.");
             return;
         }
 
@@ -67,9 +66,7 @@ public class ActionBarCommand extends BaseCommand {
         int pages = (int) Math.ceil(size / 7.0);
 
         if (page > pages || page < 1) {
-            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "This page does not exist!");
-            if (sender instanceof Player player)
-                player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            ErrorUtil.error(sender, "This page does not exist!");
             return;
         }
 
@@ -94,24 +91,19 @@ public class ActionBarCommand extends BaseCommand {
 
         // CHECKING IF PLAYER IS ONLINE
         if (!target.isOnline()) {
-            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "This player isn't online!");
-            player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            ErrorUtil.error(player, "This player isn't online!");
             return;
         }
 
         // CHECK PERMISSION FOR OTHERS
         if (!player.hasPermission("actionbar.send.others") && !Objects.equals(target.getName(), player.getName())) {
-            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "You do not have the permission to send " +
-                    "ActionBar messages to others!");
-            player.playSound(player.getLocation(), "entity.experience_orb.pickup", 100, 0.5F);
+            ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to others!");
             return;
         }
 
         // CHECK PERMISSION FOR SELF
         if (!player.hasPermission("actionbar.send.self") && Objects.equals(target.getName(), player.getName())) {
-            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "You do not have the permission to send " +
-                    "ActionBar messages to yourself!");
-            player.playSound(player.getLocation(), "entity.experience_orb.pickup", 100, 0.5F);
+            ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to yourself!");
             return;
         }
 
@@ -142,9 +134,7 @@ public class ActionBarCommand extends BaseCommand {
             sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GOLD + "Successfully deleted " + ChatColor.GRAY +
                     "the ActionBar with the name " + ChatColor.RED + "\"" + name + "\"" + ChatColor.GRAY + ".");
         } else {
-            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "No such ActionBar exists!");
-            if (sender instanceof Player player)
-                player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            ErrorUtil.error(sender, "No such ActionBar exists!");
         }
     }
 
@@ -156,8 +146,7 @@ public class ActionBarCommand extends BaseCommand {
 
         // CHECKING IF THERE ARE ANY RECENT BARS BY THE PLAYER
         if (!instance.getHandler().getRecents().containsKey(uuid)) {
-            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "You haven't sent an ActionBar recently!");
-            player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            ErrorUtil.error(player, "You haven't sent an ActionBar recently!");
             return;
         }
 
@@ -176,8 +165,7 @@ public class ActionBarCommand extends BaseCommand {
         @Nullable ActionBar maybeExists = instance.getManager().getBar(name);
 
         if (maybeExists != null && maybeExists.creator() == player.getUniqueId()) {
-            player.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "An ActionBar with that name already exists!");
-            player.playSound(player.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+            ErrorUtil.error(player, "An ActionBar with that name already exists!");
             return false;
         }
 
@@ -208,8 +196,7 @@ public class ActionBarCommand extends BaseCommand {
             @Nullable ActionBar bar = instance.getManager().getBar(name);
 
             if (bar == null) {
-                sender.sendMessage(BarsOfAction.PREFIX + ChatColor.RED + "No such ActionBar exists!");
-                sender.playSound(sender.getLocation(), "entity.enderman.teleport", 100, 0.5F);
+                ErrorUtil.error(sender, "No such ActionBar exists!");
                 return;
             }
 

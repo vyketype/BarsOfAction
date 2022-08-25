@@ -1,7 +1,7 @@
 name: BarsOfAction
 description: Create and send actionbars with ease
 main: io.github.vyketype.barsofaction.BarsOfAction
-version: 1.0
+version: 1.1-SNAPSHOT
 api-version: 1.19
 author: vyketype
 website: vyketype.github.io/barsofaction
