@@ -84,7 +84,7 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("broadcast")
-    @Description("Broadcast a custom ActionBar. /ab broadcast <message> OR ALTERNATIVELY TO RETRIEVE A SAVED ACTIONBAR: /ab broadcast -get <savename>")
+    @Description("Broadcast a custom ActionBar. /ab broadcast <message || -get [savename]> [-sound <sound>]")
     @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
         handleSending(player, strArgs, null);
@@ -92,7 +92,7 @@ public class ActionBarCommand extends BaseCommand {
 
     @Subcommand("send")
     @CommandCompletion("@players")
-    @Description("Send a custom ActionBar. /ab send <target> <message> OR ALTERNATIVELY TO RETRIEVE A SAVED ACTIONBAR: /ab send <player> -get <savename>")
+    @Description("Send a custom ActionBar. /ab send <target> <message || -get [savename]> [-sound <sound>]")
     public void onActionBarSend(Player player, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
@@ -219,7 +219,7 @@ public class ActionBarCommand extends BaseCommand {
 
         // -SOUND ARGUMENT
         if (args[args.length - 2].equalsIgnoreCase("-sound")) {
-            String argSound = args[args.length - 1];
+            String argSound = args[args.length - 1].toUpperCase().replace('.', '_');
 
             try {
                 Sound.valueOf(argSound);
@@ -247,13 +247,13 @@ public class ActionBarCommand extends BaseCommand {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 actionBar.send(p, sound);
             }
+            sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
+                    "successfully broadcast" + ChatColor.GRAY  + ".");
         } else {
             actionBar.send(target, sound);
+            sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
+                    "successfully sent" + ChatColor.GRAY  + ".");
         }
-
-        // SEND FEEDBACK MESSAGE
-        sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
-                "successfully sent" + ChatColor.GRAY  + ".");
     }
 
 }
