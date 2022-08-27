@@ -24,9 +24,14 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
             ChatColor.RESET + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
 
-    @Getter private Config config;
-    @Getter private FileManager manager;
-    @Getter private SaveRecentHandler handler;
+    @Getter
+    private Config config;
+
+    @Getter
+    private FileManager manager;
+
+    @Getter
+    private SaveRecentHandler handler;
 
     @Override
     public void onEnable() {
@@ -52,4 +57,5 @@ public class BarsOfAction extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Disabled BarsOfAction v1.1");
     }
+
 }

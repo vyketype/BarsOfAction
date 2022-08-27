@@ -10,6 +10,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,10 @@ public class ActionBarCommand extends BaseCommand {
     public ActionBarCommand(BarsOfAction plugin) {
         this.plugin = plugin;
     }
+
+    // --------------------------------------------------------------------------------
+    // COMMAND/SUBCOMMAND HANDLERS
+    // --------------------------------------------------------------------------------
 
     @HelpCommand
     @Default
@@ -162,6 +167,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     // --------------------------------------------------------------------------------
+    // USEFUL METHODS USED BY THE SUBCOMMANDS
+    // --------------------------------------------------------------------------------
 
     private boolean checkIfExists(Player player, String name) {
         // CHECKING IF AN ACTIONBAR WITH THAT NAME EXISTS
@@ -218,17 +225,15 @@ public class ActionBarCommand extends BaseCommand {
         ActionBar actionBar = new ActionBar(sender.getUniqueId(), "nameDoesNotMatter",
                 ChatColor.translateAlternateColorCodes('&', content));
 
-        // IF TARGET IS NULL, DO BROADCAST
+        // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 actionBar.send(p);
-                p.playSound(p.getLocation(), "entity.experience_orb.pickup", 100, 0.5F);
+                p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 0.5F);
             }
-        }
-        // OTHERWISE, SEND TO INDIVIDUAL
-        else {
+        } else {
             actionBar.send(target);
-            target.playSound(target.getLocation(), "entity.experience_orb.pickup", 100, 0.5F);
+            target.playSound(target.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 0.5F);
         }
 
         // SEND FEEDBACK MESSAGE

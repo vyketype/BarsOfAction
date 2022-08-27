@@ -11,6 +11,7 @@ import java.util.UUID;
  */
 public class SaveRecentHandler {
 
-    @Getter private final Map<UUID, String> recents = new HashMap<>();
+    @Getter
+    private final Map<UUID, String> recents = new HashMap<>();
 
 }
