@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.network.PlayerConnection;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -24,13 +25,15 @@ public record ActionBar(UUID creator, String name, String content) {
             CraftPlayer craftPlayer = (CraftPlayer) player;
             EntityPlayer handle = craftPlayer.getHandle();
 
-            PlayerConnection playerConnection = handle.b;
-
             JsonElement element = GsonComponentSerializer.gson().serializeToTree(Component.text(content));
+
+            PlayerConnection playerConnection = handle.b;
             IChatBaseComponent component = IChatBaseComponent.ChatSerializer.a(element);
             ClientboundSystemChatPacket packet = new ClientboundSystemChatPacket(component, true);
 
             playerConnection.a(packet);
+
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 0.5F);
         } catch (Exception e) {
             e.printStackTrace();
         }

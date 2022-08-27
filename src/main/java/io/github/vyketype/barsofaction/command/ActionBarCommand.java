@@ -10,7 +10,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ public class ActionBarCommand extends BaseCommand {
     @Subcommand("permissions|perms")
     @Description("List all permissions for this plugin. /ab perms")
     public void onActionBarPerms(CommandSender sender) {
-        sender.sendMessage(BarsOfAction.PREFIX + "Getting the permissions for this plugin...");
+        sender.sendMessage(BarsOfAction.NAMESPACE + "Getting the permissions for this plugin...");
         sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.broadcast" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab broadcast");
         sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.delete" +
@@ -131,7 +130,7 @@ public class ActionBarCommand extends BaseCommand {
         if (!checkIfExists(player, name)) return;
 
         plugin.getManager().saveBar(new ActionBar(player.getUniqueId(), name, message));
-        player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
+        player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
 
@@ -140,7 +139,7 @@ public class ActionBarCommand extends BaseCommand {
     @CommandPermission("actionbar.delete")
     public void onActionBarDelete(CommandSender sender, String name) {
         if (plugin.getManager().deleteBar(name)) {
-            sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GOLD + "Successfully deleted " + ChatColor.GRAY +
+            sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GOLD + "Successfully deleted " + ChatColor.GRAY +
                     "the ActionBar with the name " + ChatColor.RED + "\"" + name + "\"" + ChatColor.GRAY + ".");
         } else {
             ErrorUtil.error(sender, "No such ActionBar exists!");
@@ -162,7 +161,7 @@ public class ActionBarCommand extends BaseCommand {
         if (!checkIfExists(player, name)) return;
 
         plugin.getManager().saveBar(new ActionBar(uuid, name, plugin.getHandler().getRecents().get(uuid)));
-        player.sendMessage(BarsOfAction.PREFIX + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
+        player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
 
@@ -189,11 +188,11 @@ public class ActionBarCommand extends BaseCommand {
         int pages = (int) Math.ceil(size / 7.0);
         int limit = Math.min(7 * page, size);
 
-        sender.sendMessage(BarsOfAction.PREFIX + "Retrieving saved ActionBars...");
+        sender.sendMessage(BarsOfAction.NAMESPACE + "Retrieving saved ActionBars...");
         for (int i = (page - 1) * 7 + 1; i <= limit; i++) {
             sender.sendMessage(plugin.getManager().getSavedBars().get(i - 1).toString());
         }
-        sender.sendMessage(BarsOfAction.PREFIX + "Page " + ChatColor.GREEN + page + ChatColor.GRAY + "/" + pages);
+        sender.sendMessage(BarsOfAction.NAMESPACE + "Page " + ChatColor.GREEN + page + ChatColor.GRAY + "/" + pages);
     }
 
     public void handleSending(Player sender, String strArgs, @Nullable Player target) {
@@ -229,15 +228,13 @@ public class ActionBarCommand extends BaseCommand {
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 actionBar.send(p);
-                p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 0.5F);
             }
         } else {
             actionBar.send(target);
-            target.playSound(target.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 0.5F);
         }
 
         // SEND FEEDBACK MESSAGE
-        sender.sendMessage(BarsOfAction.PREFIX + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
+        sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                 "successfully sent" + ChatColor.GRAY  + ".");
     }
 

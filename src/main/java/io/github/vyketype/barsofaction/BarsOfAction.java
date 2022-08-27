@@ -13,7 +13,7 @@ import java.io.File;
 
 public class BarsOfAction extends JavaPlugin {
 
-    public static String PREFIX = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
+    public static String NAMESPACE = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
             ChatColor.of("#6db091") + ChatColor.BOLD + "C" +
             ChatColor.of("#6ab297") + ChatColor.BOLD + "T" +
             ChatColor.of("#66b39d") + ChatColor.BOLD + "I" +
@@ -55,7 +55,7 @@ public class BarsOfAction extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("Disabled BarsOfAction v1.1");
+        getLogger().info("Disabled BarsOfAction v1.1 by vyketype");
     }
 
 }
