@@ -1,4 +1,4 @@
-package io.github.vyketype.barsofaction.util;
+package io.github.vyketype.barsofaction.data;
 
 import io.github.vyketype.barsofaction.ActionBar;
 import io.github.vyketype.barsofaction.BarsOfAction;

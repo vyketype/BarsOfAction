@@ -3,8 +3,8 @@ package io.github.vyketype.barsofaction;
 import co.aikar.commands.BukkitCommandManager;
 import io.github.vyketype.barsofaction.command.ActionBarCommand;
 import io.github.vyketype.barsofaction.handler.SaveRecentHandler;
-import io.github.vyketype.barsofaction.util.Config;
-import io.github.vyketype.barsofaction.util.FileManager;
+import io.github.vyketype.barsofaction.data.FileManager;
+import io.github.vyketype.barsofaction.data.Config;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,7 +30,7 @@ public class BarsOfAction extends JavaPlugin {
     private Config config;
 
     @Getter
-    private FileManager manager;
+    private FileManager fileManager;
 
     @Getter
     private SaveRecentHandler handler;
@@ -39,10 +39,9 @@ public class BarsOfAction extends JavaPlugin {
     public void onEnable() {
         try {
             config = new Config(this, new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"), "savedbars.yml");
-            manager = new FileManager(this);
+            fileManager = new FileManager(this);
             handler = new SaveRecentHandler();
 
-            // Would have done in a separate class if there was more than one command...
             BukkitCommandManager bcm = new BukkitCommandManager(this);
             bcm.registerCommand(new ActionBarCommand(this));
             bcm.enableUnstableAPI("help");

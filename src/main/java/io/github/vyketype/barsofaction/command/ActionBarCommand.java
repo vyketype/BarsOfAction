@@ -59,7 +59,7 @@ public class ActionBarCommand extends BaseCommand {
     @Description("List all saved ActionBars. /ab list [page]")
     public void onActionBarList(CommandSender sender, @Optional Integer page) {
         // CHECKING IF SAVED BARS EXIST AT ALL
-        if (plugin.getManager().getSavedBars().isEmpty()) {
+        if (plugin.getFileManager().getSavedBars().isEmpty()) {
             ErrorUtil.error(sender, "There are no saved ActionBars.");
             return;
         }
@@ -71,7 +71,7 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         // CHECKING IF THE PAGE EXISTS
-        int size = plugin.getManager().getSavedBars().size();
+        int size = plugin.getFileManager().getSavedBars().size();
         int pages = (int) Math.ceil(size / 7.0);
 
         if (page > pages || page < 1) {
@@ -104,13 +104,13 @@ public class ActionBarCommand extends BaseCommand {
             return;
         }
 
-        // CHECK PERMISSION FOR OTHERS
+        // CHECKING PERMISSION FOR OTHERS
         if (!player.hasPermission("actionbar.send.others") && !Objects.equals(target.getName(), player.getName())) {
             ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to others!");
             return;
         }
 
-        // CHECK PERMISSION FOR SELF
+        // CHECKING PERMISSION FOR SELF
         if (!player.hasPermission("actionbar.send.self") && Objects.equals(target.getName(), player.getName())) {
             ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to yourself!");
             return;
@@ -130,7 +130,7 @@ public class ActionBarCommand extends BaseCommand {
 
         if (!checkIfExists(player, name)) return;
 
-        plugin.getManager().saveBar(new ActionBar(player.getUniqueId(), name, message));
+        plugin.getFileManager().saveBar(new ActionBar(player.getUniqueId(), name, message));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
@@ -139,7 +139,7 @@ public class ActionBarCommand extends BaseCommand {
     @Description("Delete a saved ActionBar. /ab delete <name>")
     @CommandPermission("actionbar.delete")
     public void onActionBarDelete(CommandSender sender, String name) {
-        if (plugin.getManager().deleteBar(name)) {
+        if (plugin.getFileManager().deleteBar(name)) {
             sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GOLD + "Successfully deleted " + ChatColor.GRAY +
                     "the ActionBar with the name " + ChatColor.RED + "\"" + name + "\"" + ChatColor.GRAY + ".");
         } else {
@@ -161,7 +161,7 @@ public class ActionBarCommand extends BaseCommand {
 
         if (!checkIfExists(player, name)) return;
 
-        plugin.getManager().saveBar(new ActionBar(uuid, name, plugin.getHandler().getRecents().get(uuid)));
+        plugin.getFileManager().saveBar(new ActionBar(uuid, name, plugin.getHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
@@ -173,7 +173,7 @@ public class ActionBarCommand extends BaseCommand {
     private boolean checkIfExists(Player player, String name) {
         // CHECKING IF AN ACTIONBAR WITH THAT NAME EXISTS
         // IF IT EXISTS, ONLY THE CREATOR PLAYER CAN OVERWRITE ITS SAVE
-        @Nullable ActionBar maybeExists = plugin.getManager().getBar(name);
+        @Nullable ActionBar maybeExists = plugin.getFileManager().getBar(name);
 
         if (maybeExists != null && maybeExists.creator() == player.getUniqueId()) {
             ErrorUtil.error(player, "An ActionBar with that name already exists!");
@@ -185,13 +185,13 @@ public class ActionBarCommand extends BaseCommand {
 
     public void showListPage(CommandSender sender, int page) {
         // EACH PAGE WILL HAVE 7 ENTRIES
-        int size = plugin.getManager().getSavedBars().size();
+        int size = plugin.getFileManager().getSavedBars().size();
         int pages = (int) Math.ceil(size / 7.0);
         int limit = Math.min(7 * page, size);
 
         sender.sendMessage(BarsOfAction.NAMESPACE + "Retrieving saved ActionBars...");
         for (int i = (page - 1) * 7 + 1; i <= limit; i++) {
-            sender.sendMessage(plugin.getManager().getSavedBars().get(i - 1).toString());
+            sender.sendMessage(plugin.getFileManager().getSavedBars().get(i - 1).toString());
         }
         sender.sendMessage(BarsOfAction.NAMESPACE + "Page " + ChatColor.GREEN + page + ChatColor.GRAY + "/" + pages);
     }
@@ -205,7 +205,7 @@ public class ActionBarCommand extends BaseCommand {
         // -GET ARGUMENT
         if (args[0].equalsIgnoreCase("-get")) {
             String name = args[1];
-            @Nullable ActionBar bar = plugin.getManager().getBar(name);
+            @Nullable ActionBar bar = plugin.getFileManager().getBar(name);
 
             if (bar == null) {
                 ErrorUtil.error(sender, "No such ActionBar exists!");
