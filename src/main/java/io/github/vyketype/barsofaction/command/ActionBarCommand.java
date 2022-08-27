@@ -10,6 +10,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -199,6 +200,7 @@ public class ActionBarCommand extends BaseCommand {
         String[] args = StringUtils.split(strArgs, " ", -1);
 
         String content;
+        String sound;
 
         // -GET ARGUMENT
         if (args[0].equalsIgnoreCase("-get")) {
@@ -215,6 +217,22 @@ public class ActionBarCommand extends BaseCommand {
             content = strArgs;
         }
 
+        // -SOUND ARGUMENT
+        if (args[args.length - 2].equalsIgnoreCase("-sound")) {
+            String argSound = args[args.length - 1];
+
+            try {
+                Sound.valueOf(argSound);
+            } catch (IllegalArgumentException noSound) {
+                ErrorUtil.error(sender, "No such sound exists in the Minecraft files!");
+                return;
+            }
+
+            sound = argSound;
+        } else {
+            sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
+        }
+
         // SEND TO CONSOLE
         plugin.getLogger().info("ActionBar message by " + sender.getName() + " : " + content);
 
@@ -227,10 +245,10 @@ public class ActionBarCommand extends BaseCommand {
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                actionBar.send(p);
+                actionBar.send(p, sound);
             }
         } else {
-            actionBar.send(target);
+            actionBar.send(target, sound);
         }
 
         // SEND FEEDBACK MESSAGE

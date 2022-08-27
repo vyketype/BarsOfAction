@@ -20,7 +20,7 @@ public record ActionBar(UUID creator, String name, String content) {
     /**
      * Sends the actionbar packet to a player
      */
-    public void send(Player player) {
+    public void send(Player player, String sound) {
         try {
             CraftPlayer craftPlayer = (CraftPlayer) player;
             EntityPlayer handle = craftPlayer.getHandle();
@@ -33,7 +33,7 @@ public record ActionBar(UUID creator, String name, String content) {
 
             playerConnection.a(packet);
 
-            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 100, 0.5F);
+            player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100, 0.5F);
         } catch (Exception e) {
             e.printStackTrace();
         }

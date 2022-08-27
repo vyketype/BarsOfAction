@@ -24,6 +24,8 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
             ChatColor.RESET + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
 
+    public static String VERSION = "v1.2-SNAPSHOT";
+
     @Getter
     private Config config;
 
@@ -46,16 +48,16 @@ public class BarsOfAction extends JavaPlugin {
             bcm.enableUnstableAPI("help");
             bcm.enableUnstableAPI("brigadier");
 
-            getLogger().info("Successfully loaded BarsOfAction v1.1 by vyketype");
+            getLogger().info("Successfully loaded BarsOfAction " + VERSION + " by vyketype");
         } catch (Throwable t) {
             t.printStackTrace();
-            getLogger().info("Failed to load BarsOfAction v1.1");
+            getLogger().info("Failed to load BarsOfAction " + VERSION);
         }
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Disabled BarsOfAction v1.1 by vyketype");
+        getLogger().info("Disabled BarsOfAction " + VERSION + " by vyketype");
     }
 
 }
