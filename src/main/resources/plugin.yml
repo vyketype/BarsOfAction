@@ -4,13 +4,4 @@ main: io.github.vyketype.barsofaction.BarsOfAction
 version: 1.1
 api-version: 1.19
 author: vyketype
-website: vyketype.github.io/barsofaction
-commands:
-  actionbar:
-    description: Create and send actionbars with ease
-    usage: /<command> <send|save|resend|help>
-    permission: actionbar.use
-permissions:
-  actionbar.use:
-    description: Create and send actionbars with ease
-    default: op
+# website: vyketype.github.io/barsofaction
