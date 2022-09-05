@@ -13,10 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
- * Better YAML config
+ * Better YAML config.
  */
 public class Config extends YamlConfiguration {
-
     private final BarsOfAction plugin;
 
     private final File file;
@@ -40,7 +39,7 @@ public class Config extends YamlConfiguration {
     }
 
     /**
-     * Saves the updated YAML file
+     * Saves the updated YAML file.
      */
     public void save() {
         try {
@@ -52,7 +51,7 @@ public class Config extends YamlConfiguration {
     }
 
     /**
-     * Loads/reloads the existing YAML file
+     * Loads/reloads the existing YAML file.
      */
     public void reload() {
         try {
@@ -64,7 +63,7 @@ public class Config extends YamlConfiguration {
     }
 
     /**
-     * Creates a YAML file if the specified file does not exist already
+     * Creates a YAML file if the specified file does not exist already.
      */
     public void createIfNotExists() {
         if (file.exists()) {
@@ -84,5 +83,4 @@ public class Config extends YamlConfiguration {
             plugin.getLogger().warning("Failed to create " + file.getName() + ".");
         }
     }
-
 }

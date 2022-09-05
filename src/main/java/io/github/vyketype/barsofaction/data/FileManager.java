@@ -9,7 +9,6 @@ import java.util.*;
  * Manages the saving and loading of existing actionbars
  */
 public class FileManager {
-
     private final BarsOfAction plugin;
 
     public FileManager(BarsOfAction plugin) {
@@ -17,8 +16,9 @@ public class FileManager {
     }
 
     /**
-     * Saves the ActionBar in savedbars.yml
-     * @param bar ActionBar to be saved
+     * Saves the ActionBar in savedbars.yml.
+     *
+     * @param bar ActionBar to be saved.
      */
     public void saveBar(ActionBar bar) {
         plugin.getConfig().set("actionBars." + bar.name() + ".creator", bar.creator().toString());
@@ -27,9 +27,10 @@ public class FileManager {
     }
 
     /**
-     * Delete a saved ActionBar from savedbars.yml using a name
-     * @param name name of the ActionBar to delete
-     * @return true if the operation was successful
+     * Delete a saved ActionBar from savedbars.yml using a name.
+     *
+     * @param name Name of the ActionBar to delete.
+     * @return True if the operation was successful.
      */
     public boolean deleteBar(String name) {
         if (plugin.getConfig().getConfigurationSection("actionBars." + name) == null) return false;
@@ -39,9 +40,10 @@ public class FileManager {
     }
 
     /**
-     * Gets an ActionBar from savedbars.yml using a name
-     * @param name name of the ActionBar to retrieve
-     * @return retrieved ActionBar or null if none exists
+     * Gets an ActionBar from savedbars.yml using a name.
+     *
+     * @param name Name of the ActionBar to retrieve.
+     * @return Retrieved ActionBar or null if none exists.
      */
     public @Nullable ActionBar getBar(String name) {
         if (plugin.getConfig().getConfigurationSection("actionBars." + name) == null) return null;
@@ -53,8 +55,9 @@ public class FileManager {
     }
 
     /**
-     * Gets the list of all saved ActionBars from savedbars.yml
-     * @return list of saved ActionBars
+     * Gets the list of all saved ActionBars from savedbars.yml.
+     *
+     * @return List of saved ActionBars.
      */
     public List<ActionBar> getSavedBars() {
         List<ActionBar> list = new ArrayList<>();
@@ -68,5 +71,4 @@ public class FileManager {
 
         return list;
     }
-
 }

@@ -20,7 +20,6 @@ import java.util.UUID;
 
 @CommandAlias("actionbar|ab")
 public class ActionBarCommand extends BaseCommand {
-
     private final BarsOfAction plugin;
 
     public ActionBarCommand(BarsOfAction plugin) {
@@ -255,5 +254,4 @@ public class ActionBarCommand extends BaseCommand {
                     "successfully sent" + ChatColor.GRAY  + ".");
         }
     }
-
 }

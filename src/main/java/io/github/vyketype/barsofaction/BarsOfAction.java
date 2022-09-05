@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 public class BarsOfAction extends JavaPlugin {
-
     public static String NAMESPACE = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
             ChatColor.of("#6db091") + ChatColor.BOLD + "C" +
             ChatColor.of("#6ab297") + ChatColor.BOLD + "T" +
@@ -23,7 +22,7 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.of("#5cbab4") + ChatColor.BOLD + "A" +
             ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
             ChatColor.RESET + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
-
+    
     public static String VERSION = "v1.2-SNAPSHOT";
 
     @Getter
@@ -58,5 +57,4 @@ public class BarsOfAction extends JavaPlugin {
     public void onDisable() {
         getLogger().info("Disabled BarsOfAction " + VERSION + " by vyketype");
     }
-
 }

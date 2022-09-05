@@ -16,9 +16,11 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public record ActionBar(UUID creator, String name, String content) {
-
     /**
-     * Sends the actionbar packet to a player
+     * Sends the ActionBar packet to a player.
+     *
+     * @param player The player to whom the ActionBar should be sent.
+     * @param sound The sound to play when the ActionBar is sent.
      */
     public void send(Player player, String sound) {
         try {
@@ -45,5 +47,4 @@ public record ActionBar(UUID creator, String name, String content) {
         return ChatColor.DARK_GRAY + "> " + ChatColor.LIGHT_PURPLE + name + ChatColor.WHITE + " : by " +
                 ChatColor.GRAY + Bukkit.getOfflinePlayer(creator).getName();
     }
-
 }
