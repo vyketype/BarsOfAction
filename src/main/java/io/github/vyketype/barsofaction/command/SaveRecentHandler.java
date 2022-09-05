@@ -1,4 +1,4 @@
-package io.github.vyketype.barsofaction.handler;
+package io.github.vyketype.barsofaction.command;
 
 import lombok.Getter;
 

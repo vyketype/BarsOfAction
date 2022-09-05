@@ -1,4 +1,4 @@
-package io.github.vyketype.barsofaction;
+package io.github.vyketype.barsofaction.data;
 
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;

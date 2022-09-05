@@ -1,9 +1,9 @@
-package io.github.vyketype.barsofaction.command;
+package io.github.vyketype.barsofaction.command.impl;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
-import io.github.vyketype.barsofaction.ActionBar;
+import io.github.vyketype.barsofaction.data.ActionBar;
 import io.github.vyketype.barsofaction.BarsOfAction;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
 import net.md_5.bungee.api.ChatColor;

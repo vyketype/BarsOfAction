@@ -1,6 +1,5 @@
 package io.github.vyketype.barsofaction.data;
 
-import io.github.vyketype.barsofaction.ActionBar;
 import io.github.vyketype.barsofaction.BarsOfAction;
 import org.jetbrains.annotations.Nullable;
 

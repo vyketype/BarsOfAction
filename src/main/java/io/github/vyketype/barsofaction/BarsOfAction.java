@@ -1,8 +1,8 @@
 package io.github.vyketype.barsofaction;
 
 import co.aikar.commands.BukkitCommandManager;
-import io.github.vyketype.barsofaction.command.ActionBarCommand;
-import io.github.vyketype.barsofaction.handler.SaveRecentHandler;
+import io.github.vyketype.barsofaction.command.impl.ActionBarCommand;
+import io.github.vyketype.barsofaction.command.SaveRecentHandler;
 import io.github.vyketype.barsofaction.data.FileManager;
 import io.github.vyketype.barsofaction.data.Config;
 import lombok.Getter;
