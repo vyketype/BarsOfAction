@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------
+# CONFIGURATION SETTINGS FOR BARSOFACTION
+# ---------------------------------------------------------------------
+
+# ACTIONBAR PREFIX
+prefix: ""
+
+# ACTIONBAR PREFIX CHAR LIMIT
+prefixCharLimit: 15

@@ -1,10 +1,9 @@
 package io.github.vyketype.barsofaction;
 
-import co.aikar.commands.BukkitCommandManager;
-import io.github.vyketype.barsofaction.command.impl.ActionBarCommand;
+import io.github.vyketype.barsofaction.command.CommandManager;
 import io.github.vyketype.barsofaction.command.SaveRecentHandler;
-import io.github.vyketype.barsofaction.data.FileManager;
 import io.github.vyketype.barsofaction.data.Config;
+import io.github.vyketype.barsofaction.data.FileManager;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,27 +25,28 @@ public class BarsOfAction extends JavaPlugin {
     public static String VERSION = "v1.2";
 
     @Getter
+    private Config savedBars;
+    @Getter
     private Config config;
 
     @Getter
     private FileManager fileManager;
-
     @Getter
     private SaveRecentHandler handler;
+    @Getter
+    private CommandManager commandManager;
 
     @Override
     public void onEnable() {
         try {
-            config = new Config(this, new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"), "savedbars.yml");
+            savedBars = new Config(this, new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"), "savedbars.yml");
+            config = new Config(this, new File(getDataFolder().getAbsolutePath() + "/config.yml"), "config.yml");
             fileManager = new FileManager(this);
             handler = new SaveRecentHandler();
-
-            BukkitCommandManager bcm = new BukkitCommandManager(this);
-            bcm.registerCommand(new ActionBarCommand(this));
-            bcm.enableUnstableAPI("help");
-            bcm.enableUnstableAPI("brigadier");
+            commandManager = new CommandManager(this);
 
             getLogger().info("Successfully loaded BarsOfAction " + VERSION + " by vyketype");
+            getLogger().info("ActionBar prefix: " + config.get("prefix"));
         } catch (Throwable t) {
             t.printStackTrace();
             getLogger().info("Failed to load BarsOfAction " + VERSION);

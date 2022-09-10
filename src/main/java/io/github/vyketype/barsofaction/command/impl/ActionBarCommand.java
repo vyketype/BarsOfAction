@@ -126,10 +126,11 @@ public class ActionBarCommand extends BaseCommand {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String message = StringUtils.join(args, " ", 0, args.length - 1);
         String name = args[args.length - 1];
+        String prefix = plugin.getConfig().getString("prefix");
 
         if (!checkIfExists(player, name)) return;
 
-        plugin.getFileManager().saveBar(new ActionBar(player.getUniqueId(), name, message));
+        plugin.getFileManager().saveBar(new ActionBar(player.getUniqueId(), prefix + name, message));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
@@ -159,7 +160,7 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         if (!checkIfExists(player, name)) return;
-
+    
         plugin.getFileManager().saveBar(new ActionBar(uuid, name, plugin.getHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
@@ -237,9 +238,10 @@ public class ActionBarCommand extends BaseCommand {
 
         // ADD TO HANDLER
         plugin.getHandler().getRecents().put(sender.getUniqueId(), content);
-
+    
+        String prefix = plugin.getConfig().getString("prefix");
         ActionBar actionBar = new ActionBar(sender.getUniqueId(), "nameDoesNotMatter",
-                ChatColor.translateAlternateColorCodes('&', content));
+                ChatColor.translateAlternateColorCodes('&', prefix + content));
 
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
