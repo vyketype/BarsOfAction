@@ -51,6 +51,8 @@ public class ActionBarCommand extends BaseCommand {
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to yourself");
         sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.send.others" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to others");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.prefix" +
+                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab prefix");
         sender.sendMessage();
     }
 
