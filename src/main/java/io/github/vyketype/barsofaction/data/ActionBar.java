@@ -1,16 +1,10 @@
 package io.github.vyketype.barsofaction.data;
 
-import com.google.gson.JsonElement;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.network.PlayerConnection;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -28,27 +22,13 @@ public record ActionBar(UUID creator, String name, String content) {
      * @param sound The sound to play when the ActionBar is sent.
      */
     public void send(Player player, String sound) {
-        try {
-            CraftPlayer craftPlayer = (CraftPlayer) player;
-            EntityPlayer handle = craftPlayer.getHandle();
-            
-            JsonElement element = GsonComponentSerializer.gson().serializeToTree(Component.text(content));
-
-            PlayerConnection playerConnection = handle.b;
-            IChatBaseComponent component = IChatBaseComponent.ChatSerializer.a(element);
-            ClientboundSystemChatPacket packet = new ClientboundSystemChatPacket(component, true);
-
-            playerConnection.a(packet);
-
-            player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100, 0.5F);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(content));
+        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100, 0.5F);
     }
 
     @Override
     public String toString() {
-        // > template : by vPrototype_ (15s repeat)
+        // > template : by vPrototype_
         return ChatColor.DARK_GRAY + "> " + ChatColor.LIGHT_PURPLE + name + ChatColor.WHITE + " : by " +
                 ChatColor.GRAY + Bukkit.getOfflinePlayer(creator).getName();
     }
