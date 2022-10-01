@@ -167,6 +167,22 @@ public class ActionBarCommand extends BaseCommand {
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
+    
+    @Subcommand("sendtoconsole")
+    @Description("Toggle if sent ActionBars get sent to console. /ab sendtoconsole")
+    @CommandPermission("actionbar.consoletoggle")
+    public void onActionBarSendToConsole(CommandSender sender) {
+        if (plugin.getConfig().getBoolean("sendToConsole")) {
+            plugin.getConfig().set("sendToConsole", false);
+        } else {
+            plugin.getConfig().set("sendToConsole", true);
+        }
+        plugin.getConfig().save();
+        
+        sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "Toggled sending ActionBars to console to " +
+                (plugin.getConfig().getBoolean("sendToConsole") ? ChatColor.GREEN + "true" : ChatColor.RED + "false") +
+                ChatColor.GRAY + ".");
+    }
 
     // --------------------------------------------------------------------------------
     // USEFUL METHODS USED BY THE SUBCOMMANDS
@@ -242,7 +258,9 @@ public class ActionBarCommand extends BaseCommand {
         }
         
         // SEND TO CONSOLE
-        plugin.getLogger().info("ActionBar message by " + sender.getName() + " : " + content);
+        if (plugin.getConfig().getBoolean("sendToConsole")) {
+            plugin.getLogger().info("ActionBar message by " + sender.getName() + " : " + content);
+        }
 
         // ADD TO HANDLER
         plugin.getHandler().getRecents().put(sender.getUniqueId(), content);
