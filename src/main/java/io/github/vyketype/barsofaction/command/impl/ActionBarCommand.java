@@ -3,8 +3,8 @@ package io.github.vyketype.barsofaction.command.impl;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
-import io.github.vyketype.barsofaction.data.ActionBar;
 import io.github.vyketype.barsofaction.BarsOfAction;
+import io.github.vyketype.barsofaction.data.ActionBar;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
@@ -185,7 +185,7 @@ public class ActionBarCommand extends BaseCommand {
         return true;
     }
 
-    public void showListPage(CommandSender sender, int page) {
+    private void showListPage(CommandSender sender, int page) {
         // EACH PAGE WILL HAVE 7 ENTRIES
         int size = plugin.getFileManager().getSavedBars().size();
         int pages = (int) Math.ceil(size / 7.0);
@@ -198,7 +198,7 @@ public class ActionBarCommand extends BaseCommand {
         sender.sendMessage(BarsOfAction.NAMESPACE + "Page " + ChatColor.GREEN + page + ChatColor.GRAY + "/" + pages);
     }
 
-    public void handleSending(Player sender, String strArgs, @Nullable Player target) {
+    private void handleSending(Player sender, String strArgs, @Nullable Player target) {
         String[] args = StringUtils.split(strArgs, " ", -1);
 
         String content;
@@ -220,7 +220,7 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         // -SOUND ARGUMENT
-        if (args[args.length - 2].equalsIgnoreCase("-sound")) {
+        if (args.length != 1 && args[args.length - 2].equalsIgnoreCase("-sound")) {
             String argSound = args[args.length - 1].toUpperCase().replace('.', '_');
 
             try {
@@ -234,7 +234,13 @@ public class ActionBarCommand extends BaseCommand {
         } else {
             sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
         }
-
+        
+        // ESCAPE SEQUENCES
+        if (content.contains("\\-sound") || content.contains("\\-get")) {
+            content = content.replace("\\-sound", "-sound");
+            content = content.replace("\\-get", "-get");
+        }
+        
         // SEND TO CONSOLE
         plugin.getLogger().info("ActionBar message by " + sender.getName() + " : " + content);
 

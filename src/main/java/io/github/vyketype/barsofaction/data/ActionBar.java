@@ -15,6 +15,11 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+/**
+ * Represents a saveable ActionBar.
+ *
+ * @author vyketype
+ */
 public record ActionBar(UUID creator, String name, String content) {
     /**
      * Sends the ActionBar packet to a player.
@@ -26,7 +31,7 @@ public record ActionBar(UUID creator, String name, String content) {
         try {
             CraftPlayer craftPlayer = (CraftPlayer) player;
             EntityPlayer handle = craftPlayer.getHandle();
-
+            
             JsonElement element = GsonComponentSerializer.gson().serializeToTree(Component.text(content));
 
             PlayerConnection playerConnection = handle.b;
