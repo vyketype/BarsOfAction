@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Objects;
 
 public class BarsOfAction extends JavaPlugin {
     public static String NAMESPACE = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
@@ -46,7 +47,12 @@ public class BarsOfAction extends JavaPlugin {
             commandManager = new CommandManager(this);
 
             getLogger().info("Successfully loaded BarsOfAction " + VERSION + " by vyketype");
-            getLogger().info("ActionBar prefix: " + config.get("prefix"));
+            
+            String prefix = Objects.requireNonNull(config.getString("prefix"));
+            if (prefix.isEmpty()) {
+                prefix = "None";
+            }
+            getLogger().info("ActionBar prefix: " + prefix);
         } catch (Throwable t) {
             t.printStackTrace();
             getLogger().info("Failed to load BarsOfAction " + VERSION);
