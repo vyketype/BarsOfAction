@@ -7,7 +7,7 @@
 prefix: ""
 
 # ACTIONBAR PREFIX CHAR LIMIT
-prefixCharLimit: 15
+prefixCharLimit: 30
 
 # SEND TO CONSOLE
 sendToConsole: true

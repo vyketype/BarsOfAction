@@ -44,7 +44,7 @@ public class ActionBarPrefixCommand extends BaseCommand {
     public void onActionBarPrefixSet(CommandSender sender, String text) {
         int charLimit = plugin.getConfig().getInt("prefixCharLimit");
         if (text.length() > charLimit) {
-            ErrorUtil.error(sender, "This prefix is too long! Prefix character limit: " + charLimit);
+            ErrorUtil.error(sender, "This prefix is too long! Prefix character limit: " + charLimit + ".");
             return;
         }
         
