@@ -33,8 +33,6 @@ dependencies {
 
     compileOnly "org.spigotmc:spigot:1.19.2-R0.1-SNAPSHOT"
     implementation "co.aikar:acf-bukkit:0.5.1-SNAPSHOT"
-    implementation "net.kyori:adventure-api:4.11.0"
-    implementation "net.kyori:adventure-text-serializer-gson:4.11.0"
 }
 
 test {
