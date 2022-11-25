@@ -22,7 +22,7 @@ public class ActionBarPrefixCommand extends BaseCommand {
     
     @HelpCommand
     @Default
-    public void onActionBar(CommandHelp commandHelp) {
+    public void onActionBarPrefix(CommandHelp commandHelp) {
         commandHelp.showHelp();
     }
     

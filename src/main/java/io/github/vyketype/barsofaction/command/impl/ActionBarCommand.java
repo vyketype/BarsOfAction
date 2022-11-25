@@ -85,7 +85,7 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("broadcast")
-    @Description("Broadcast a custom ActionBar. /ab broadcast <message || -get [savename]> [-sound <sound>]")
+    @Description("Broadcast a custom ActionBar. /ab broadcast <message || -get [savename]> [-sound <sound>] [pitch]")
     @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
         handleSending(player, strArgs, null);
@@ -93,7 +93,7 @@ public class ActionBarCommand extends BaseCommand {
 
     @Subcommand("send")
     @CommandCompletion("@players")
-    @Description("Send a custom ActionBar. /ab send <target> <message || -get [savename]> [-sound <sound>]")
+    @Description("Send a custom ActionBar. /ab send <target> <message || -get [savename]> [-sound <sound>] [pitch]")
     public void onActionBarSend(Player player, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
