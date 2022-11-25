@@ -218,7 +218,8 @@ public class ActionBarCommand extends BaseCommand {
         String[] args = StringUtils.split(strArgs, " ", -1);
 
         String content;
-        String sound;
+        String sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
+        float pitch = 1F;
 
         // -GET ARGUMENT
         if (args[0].equalsIgnoreCase("-get")) {
@@ -236,19 +237,33 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         // -SOUND ARGUMENT
-        if (args.length != 1 && args[args.length - 2].equalsIgnoreCase("-sound")) {
-            String argSound = args[args.length - 1].toUpperCase().replace('.', '_');
-
-            try {
-                Sound.valueOf(argSound);
-            } catch (IllegalArgumentException noSound) {
-                ErrorUtil.error(sender, "No such sound exists in the Minecraft files!");
-                return;
+        if (args.length > 2) {
+            if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase("-sound")) {
+                // CHECKING FOR A PITCH ARGUMENT
+                if (args[args.length - 2].equalsIgnoreCase("-sound")) {
+                    sound = args[args.length - 1].toUpperCase().replace('.', '_');
+                    content = StringUtils.join(args, " ", 0, args.length - 2);
+                } else if (args[args.length - 3].equalsIgnoreCase("-sound")) {
+                    sound = args[args.length - 2].toUpperCase().replace('.', '_');
+                    content = StringUtils.join(args, " ", 0, args.length - 3);
+            
+                    try {
+                        Double.parseDouble(args[args.length - 1]);
+                    } catch (NumberFormatException badNumber) {
+                        ErrorUtil.error(sender, "This is not a decimal number!");
+                    }
+            
+                    pitch = Float.parseFloat(args[args.length - 1]);
+                }
+        
+                // CHECKS IF THE SOUND EXISTS
+                try {
+                    Sound.valueOf(sound);
+                } catch (IllegalArgumentException noSound) {
+                    ErrorUtil.error(sender, "No such sound exists in the Minecraft files!");
+                    return;
+                }
             }
-
-            sound = argSound;
-        } else {
-            sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
         }
         
         // ESCAPE SEQUENCES
@@ -272,12 +287,12 @@ public class ActionBarCommand extends BaseCommand {
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                actionBar.send(p, sound);
+                actionBar.send(p, sound, pitch);
             }
             sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully broadcast" + ChatColor.GRAY  + ".");
         } else {
-            actionBar.send(target, sound);
+            actionBar.send(target, sound, pitch);
             sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully sent" + ChatColor.GRAY  + ".");
         }

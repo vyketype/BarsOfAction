@@ -20,10 +20,11 @@ public record ActionBar(UUID creator, String name, String content) {
      *
      * @param player The player to whom the ActionBar should be sent.
      * @param sound The sound to play when the ActionBar is sent.
+     * @param pitch The pitch to play the sound.
      */
-    public void send(Player player, String sound) {
+    public void send(Player player, String sound, float pitch) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(content));
-        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100, 0.5F);
+        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100F, pitch);
     }
 
     @Override

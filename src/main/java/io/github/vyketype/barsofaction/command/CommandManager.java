@@ -2,7 +2,8 @@ package io.github.vyketype.barsofaction.command;
 
 import co.aikar.commands.BukkitCommandManager;
 import io.github.vyketype.barsofaction.BarsOfAction;
-import io.github.vyketype.barsofaction.command.impl.*;
+import io.github.vyketype.barsofaction.command.impl.ActionBarCommand;
+import io.github.vyketype.barsofaction.command.impl.ActionBarPrefixCommand;
 
 public class CommandManager {
     private final BarsOfAction plugin;
