@@ -14,6 +14,9 @@ import java.util.Objects;
 
 /**
  * Better YAML config.
+ *
+ * @author dynmie
+ * https://github.com/dynmie
  */
 public class Config extends YamlConfiguration {
     private final BarsOfAction plugin;
