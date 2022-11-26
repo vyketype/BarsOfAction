@@ -10,10 +10,8 @@ import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -81,15 +79,14 @@ public class ActionBarCommand extends BaseCommand {
             return;
         }
 
-        int p = page;
-        showListPage(sender, p);
+        showListPage(sender, page);
     }
 
     @Subcommand("broadcast")
     @Description("Broadcast an ActionBar. /ab broadcast <message || -get [savename]> [-sound <sound>] [pitch]")
     @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
-        handleSending(player, strArgs, null);
+        ActionBar.registerArguments(plugin, player, strArgs, null);
     }
 
     @Subcommand("send")
@@ -119,7 +116,7 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         String[] newArgs = strArgs.split(" ", 2);
-        handleSending(player, newArgs[1], target.getPlayer());
+        ActionBar.registerArguments(plugin, player, newArgs[1], target.getPlayer());
     }
 
     @Subcommand("save")
@@ -131,7 +128,7 @@ public class ActionBarCommand extends BaseCommand {
         String name = args[args.length - 1];
         String prefix = plugin.getConfig().getString("prefix");
 
-        if (!checkIfExists(player, name)) return;
+        if (!ActionBar.checkIfExists(plugin, player, name)) return;
 
         plugin.getFileManager().saveBar(new ActionBar(player.getUniqueId(), prefix + name, message));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
@@ -162,7 +159,7 @@ public class ActionBarCommand extends BaseCommand {
             return;
         }
 
-        if (!checkIfExists(player, name)) return;
+        if (!ActionBar.checkIfExists(plugin, player, name)) return;
     
         plugin.getFileManager().saveBar(new ActionBar(uuid, name, plugin.getHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
@@ -186,21 +183,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     // --------------------------------------------------------------------------------
-    // USEFUL METHODS USED BY THE SUBCOMMANDS
+    // DISPLAYING LISTS
     // --------------------------------------------------------------------------------
-
-    private boolean checkIfExists(Player player, String name) {
-        // CHECKING IF AN ACTIONBAR WITH THAT NAME EXISTS
-        // IF IT EXISTS, ONLY THE CREATOR PLAYER CAN OVERWRITE ITS SAVE
-        @Nullable ActionBar maybeExists = plugin.getFileManager().getBar(name);
-
-        if (maybeExists != null && maybeExists.creator() == player.getUniqueId()) {
-            ErrorUtil.error(player, "An ActionBar with that name already exists!");
-            return false;
-        }
-
-        return true;
-    }
 
     private void showListPage(CommandSender sender, int page) {
         // EACH PAGE WILL HAVE 7 ENTRIES
@@ -213,89 +197,5 @@ public class ActionBarCommand extends BaseCommand {
             sender.sendMessage(plugin.getFileManager().getSavedBars().get(i - 1).toString());
         }
         sender.sendMessage(BarsOfAction.NAMESPACE + "Page " + ChatColor.GREEN + page + ChatColor.GRAY + "/" + pages);
-    }
-
-    private void handleSending(Player sender, String strArgs, @Nullable Player target) {
-        String[] args = StringUtils.split(strArgs, " ", -1);
-
-        String content;
-        String sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
-        float pitch = 1F;
-
-        // -GET ARGUMENT
-        if (args[0].equalsIgnoreCase("-get")) {
-            String name = args[1];
-            @Nullable ActionBar bar = plugin.getFileManager().getBar(name);
-
-            if (bar == null) {
-                ErrorUtil.error(sender, "No such ActionBar exists!");
-                return;
-            }
-
-            content = bar.content();
-        } else {
-            content = strArgs;
-        }
-
-        // -SOUND ARGUMENT
-        if (args.length > 2) {
-            if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase("-sound")) {
-                // CHECKING FOR A PITCH ARGUMENT
-                if (args[args.length - 2].equalsIgnoreCase("-sound")) {
-                    sound = args[args.length - 1].toUpperCase().replace('.', '_');
-                    content = StringUtils.join(args, " ", 0, args.length - 2);
-                } else if (args[args.length - 3].equalsIgnoreCase("-sound")) {
-                    sound = args[args.length - 2].toUpperCase().replace('.', '_');
-                    content = StringUtils.join(args, " ", 0, args.length - 3);
-            
-                    try {
-                        Double.parseDouble(args[args.length - 1]);
-                    } catch (NumberFormatException badNumber) {
-                        ErrorUtil.error(sender, "This is not a decimal number!");
-                    }
-            
-                    pitch = Float.parseFloat(args[args.length - 1]);
-                }
-        
-                // CHECKS IF THE SOUND EXISTS
-                try {
-                    Sound.valueOf(sound);
-                } catch (IllegalArgumentException noSound) {
-                    ErrorUtil.error(sender, "No such sound exists in the Minecraft files!");
-                    return;
-                }
-            }
-        }
-        
-        // ESCAPE SEQUENCES
-        if (content.contains("\\-sound") || content.contains("\\-get")) {
-            content = content.replace("\\-sound", "-sound");
-            content = content.replace("\\-get", "-get");
-        }
-        
-        // SEND TO CONSOLE
-        if (plugin.getConfig().getBoolean("sendToConsole")) {
-            plugin.getLogger().info("ActionBar message by " + sender.getName() + " : " + content);
-        }
-
-        // ADD TO HANDLER
-        plugin.getHandler().getRecents().put(sender.getUniqueId(), content);
-    
-        String prefix = plugin.getConfig().getString("prefix");
-        ActionBar actionBar = new ActionBar(sender.getUniqueId(), "nameDoesNotMatter",
-                ChatColor.translateAlternateColorCodes('&', prefix + content));
-
-        // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
-        if (target == null) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                actionBar.send(p, sound, pitch);
-            }
-            sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
-                    "successfully broadcast" + ChatColor.GRAY  + ".");
-        } else {
-            actionBar.send(target, sound, pitch);
-            sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
-                    "successfully sent" + ChatColor.GRAY  + ".");
-        }
     }
 }
