@@ -35,7 +35,7 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("permissions|perms")
-    @Description("List all permissions for this plugin. /ab perms")
+    @Description("List all permissions for this plugin.")
     public void onActionBarPerms(CommandSender sender) {
         sender.sendMessage(BarsOfAction.NAMESPACE + "Getting the permissions for this plugin...");
         sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.broadcast" +
@@ -56,7 +56,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("list")
-    @Description("List all saved ActionBars. /ab list [page]")
+    @Syntax("[page]")
+    @Description("List all saved ActionBars.")
     public void onActionBarList(CommandSender sender, @Optional Integer page) {
         // CHECKING IF SAVED BARS EXIST AT ALL
         if (plugin.getFileManager().getSavedBars().isEmpty()) {
@@ -83,15 +84,17 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("broadcast|bc")
-    @Description("Broadcast an ActionBar. /ab broadcast <text || -get [savename]> [-sound <sound>] [pitch]")
+    @Syntax("<text || -get [savename]> [-sound <sound>] [pitch]")
+    @Description("Broadcast an ActionBar.")
     @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
         ActionBar.register(plugin, player, strArgs, null);
     }
 
     @Subcommand("send")
+    @Syntax("<target> <text || -get [savename]> [-sound <sound>] [pitch]")
     @CommandCompletion("@players")
-    @Description("Send an ActionBar to a player. /ab send <target> <text || -get [savename]> [-sound <sound>] [pitch]")
+    @Description("Send an ActionBar to a player.")
     public void onActionBarSend(Player player, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
@@ -120,7 +123,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("save")
-    @Description("Save a custom ActionBar. /ab save <message> <name>")
+    @Syntax("<message> <name>")
+    @Description("Save a custom ActionBar.")
     @CommandPermission("actionbar.save")
     public void onActionBarSave(Player player, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
@@ -136,7 +140,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("delete")
-    @Description("Delete a saved ActionBar. /ab delete <name>")
+    @Syntax("<name>")
+    @Description("Delete a saved ActionBar.")
     @CommandPermission("actionbar.delete")
     public void onActionBarDelete(CommandSender sender, String name) {
         if (plugin.getFileManager().deleteBar(name)) {
@@ -148,7 +153,8 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("saverecent")
-    @Description("Save the most recent ActionBar you sent. /ab saverecent <name>")
+    @Syntax("<name>")
+    @Description("Save the most recent ActionBar you sent.")
     @CommandPermission("actionbar.save")
     public void onActionBarSaveRecent(Player player, String name) {
         UUID uuid = player.getUniqueId();
@@ -167,7 +173,7 @@ public class ActionBarCommand extends BaseCommand {
     }
     
     @Subcommand("sendtoconsole")
-    @Description("Toggle if sent ActionBars get sent to console. /ab sendtoconsole")
+    @Description("Toggle if sent ActionBars get sent to console.")
     @CommandPermission("actionbar.consoletoggle")
     public void onActionBarSendToConsole(CommandSender sender) {
         if (plugin.getConfig().getBoolean("sendToConsole")) {
