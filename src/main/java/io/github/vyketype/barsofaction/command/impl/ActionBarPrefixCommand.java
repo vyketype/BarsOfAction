@@ -40,7 +40,8 @@ public class ActionBarPrefixCommand extends BaseCommand {
     }
     
     @Subcommand("set")
-    @Description("Set a new prefix for ActionBars. /ab prefix set <prefix>")
+    @Syntax("<prefix>")
+    @Description("Set a new prefix for ActionBars.")
     public void onActionBarPrefixSet(CommandSender sender, String text) {
         int charLimit = plugin.getConfig().getInt("prefixCharLimit");
         if (text.length() > charLimit) {
@@ -54,7 +55,7 @@ public class ActionBarPrefixCommand extends BaseCommand {
     }
     
     @Subcommand("remove")
-    @Description("Remove the ActionBar prefix. /ab prefix remove")
+    @Description("Remove the ActionBar prefix.")
     public void onActionBarPrefixRemove(CommandSender sender) {
         plugin.getFileManager().setPrefix("");
         sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.RED + "Removed " + ChatColor.GRAY + "the ActionBar " +

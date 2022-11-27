@@ -27,7 +27,7 @@ public record ActionBar(UUID creator, String name, String content) {
      * @param pitch The pitch to play the sound.
      */
     public void send(BarsOfAction plugin, Player player, String sound, float pitch) {
-        String prefix = plugin.getConfig().getString("prefix");
+        String prefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefix + content));
         player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100F, pitch);
     }
@@ -35,7 +35,7 @@ public record ActionBar(UUID creator, String name, String content) {
     public void handleSending(BarsOfAction plugin, Player player, String sound, float pitch, @Nullable Player target) {
         // SEND TO CONSOLE
         if (plugin.getConfig().getBoolean("sendToConsole")) {
-            String prefix = plugin.getConfig().getString("prefix");
+            String prefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
             plugin.getLogger().info("ActionBar message by " + player.getName() + " : " + prefix + content);
         }
     
