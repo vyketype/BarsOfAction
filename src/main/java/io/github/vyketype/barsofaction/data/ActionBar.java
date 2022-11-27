@@ -81,12 +81,13 @@ public record ActionBar(UUID creator, String name, String content) {
         return true;
     }
     
-    public static void registerArguments(BarsOfAction plugin, Player sender, String strArgs, @Nullable Player target) {
+    public static void register(BarsOfAction plugin, Player sender, String strArgs, @Nullable Player target) {
         String[] args = StringUtils.split(strArgs, " ", -1);
     
         String content;
         String sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
         float pitch = 1F;
+        boolean get = false;
     
         // -GET ARGUMENT
         if (args[0].equalsIgnoreCase("-get")) {
@@ -99,6 +100,7 @@ public record ActionBar(UUID creator, String name, String content) {
             }
         
             content = bar.content();
+            get = true;
         } else {
             content = strArgs;
         }
@@ -109,10 +111,10 @@ public record ActionBar(UUID creator, String name, String content) {
                 // CHECKING FOR A PITCH ARGUMENT
                 if (args[args.length - 2].equalsIgnoreCase("-sound")) {
                     sound = args[args.length - 1].toUpperCase().replace('.', '_');
-                    content = StringUtils.join(args, " ", 0, args.length - 2);
+                    if (!get) content = StringUtils.join(args, " ", 0, args.length - 2);
                 } else if (args[args.length - 3].equalsIgnoreCase("-sound")) {
                     sound = args[args.length - 2].toUpperCase().replace('.', '_');
-                    content = StringUtils.join(args, " ", 0, args.length - 3);
+                    if (!get) content = StringUtils.join(args, " ", 0, args.length - 2);
                 
                     try {
                         Double.parseDouble(args[args.length - 1]);

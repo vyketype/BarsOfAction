@@ -23,7 +23,7 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
             ChatColor.RESET + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
     
-    public static String VERSION = "v1.3";
+    public static String VERSION = "v1.3.1-SNAPSHOT";
 
     @Getter
     private Config savedBars;
@@ -52,7 +52,7 @@ public class BarsOfAction extends JavaPlugin {
             if (prefix.isEmpty()) {
                 prefix = "None";
             }
-            getLogger().info("ActionBar prefix: " + prefix);
+            getLogger().info("ActionBar prefix: \"" + prefix + "\"");
         } catch (Throwable t) {
             t.printStackTrace();
             getLogger().info("Failed to load BarsOfAction " + VERSION);

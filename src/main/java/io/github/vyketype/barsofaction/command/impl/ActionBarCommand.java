@@ -82,16 +82,16 @@ public class ActionBarCommand extends BaseCommand {
         showListPage(sender, page);
     }
 
-    @Subcommand("broadcast")
-    @Description("Broadcast an ActionBar. /ab broadcast <message || -get [savename]> [-sound <sound>] [pitch]")
+    @Subcommand("broadcast|bc")
+    @Description("Broadcast an ActionBar. /ab broadcast <text || -get [savename]> [-sound <sound>] [pitch]")
     @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
-        ActionBar.registerArguments(plugin, player, strArgs, null);
+        ActionBar.register(plugin, player, strArgs, null);
     }
 
     @Subcommand("send")
     @CommandCompletion("@players")
-    @Description("Send an ActionBar to a player. /ab send <target> <message || -get [savename]> [-sound <sound>] [pitch]")
+    @Description("Send an ActionBar to a player. /ab send <target> <text || -get [savename]> [-sound <sound>] [pitch]")
     public void onActionBarSend(Player player, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
@@ -116,7 +116,7 @@ public class ActionBarCommand extends BaseCommand {
         }
 
         String[] newArgs = strArgs.split(" ", 2);
-        ActionBar.registerArguments(plugin, player, newArgs[1], target.getPlayer());
+        ActionBar.register(plugin, player, newArgs[1], target.getPlayer());
     }
 
     @Subcommand("save")
