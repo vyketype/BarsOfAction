@@ -26,15 +26,17 @@ public record ActionBar(UUID creator, String name, String content) {
      * @param sound The sound to play when the ActionBar is sent.
      * @param pitch The pitch to play the sound.
      */
-    public void send(Player player, String sound, float pitch) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(content));
+    public void send(BarsOfAction plugin, Player player, String sound, float pitch) {
+        String prefix = plugin.getConfig().getString("prefix");
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefix + content));
         player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100F, pitch);
     }
     
     public void handleSending(BarsOfAction plugin, Player player, String sound, float pitch, @Nullable Player target) {
         // SEND TO CONSOLE
         if (plugin.getConfig().getBoolean("sendToConsole")) {
-            plugin.getLogger().info("ActionBar message by " + player.getName() + " : " + content);
+            String prefix = plugin.getConfig().getString("prefix");
+            plugin.getLogger().info("ActionBar message by " + player.getName() + " : " + prefix + content);
         }
     
         // ADD TO HANDLER
@@ -43,12 +45,12 @@ public record ActionBar(UUID creator, String name, String content) {
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                send(p, sound, pitch);
+                send(plugin, p, sound, pitch);
             }
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully broadcast" + ChatColor.GRAY  + ".");
         } else {
-            send(target, sound, pitch);
+            send(plugin, target, sound, pitch);
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully sent" + ChatColor.GRAY  + ".");
         }
@@ -141,11 +143,10 @@ public record ActionBar(UUID creator, String name, String content) {
             content = content.replace("\\-get", "-get");
         }
     
-        String prefix = plugin.getConfig().getString("prefix");
         new ActionBar(
                 sender.getUniqueId(),
                 "nameDoesNotMatter",
-                ChatColor.translateAlternateColorCodes('&', prefix + content)
+                ChatColor.translateAlternateColorCodes('&', content)
         ).handleSending(plugin, sender, sound, pitch, target);
     }
 }
