@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.Objects;
 
 public class BarsOfAction extends JavaPlugin {
-    public static String NAMESPACE = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
+    public static String ACTIONBAR = "" + ChatColor.of("#71ae8c") + ChatColor.BOLD + "A" +
             ChatColor.of("#6db091") + ChatColor.BOLD + "C" +
             ChatColor.of("#6ab297") + ChatColor.BOLD + "T" +
             ChatColor.of("#66b39d") + ChatColor.BOLD + "I" +
@@ -21,8 +21,8 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.of("#5eb8ae") + ChatColor.BOLD + "B" +
             ChatColor.of("#5cbab4") + ChatColor.BOLD + "A" +
             ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
-            ChatColor.RESET + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
-    
+            ChatColor.RESET;
+    public static String NAMESPACE = "" + ACTIONBAR + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
     public static String VERSION = "v1.3.2-SNAPSHOT";
 
     @Getter

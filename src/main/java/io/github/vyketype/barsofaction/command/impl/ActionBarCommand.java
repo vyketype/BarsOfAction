@@ -38,23 +38,36 @@ public class ActionBarCommand extends BaseCommand {
     @Description("List all permissions for this plugin.")
     public void onActionBarPerms(CommandSender sender) {
         sender.sendMessage(BarsOfAction.NAMESPACE + "Getting the permissions for this plugin...");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.broadcast" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.broadcast" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab broadcast");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.delete" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.delete" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab delete");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.save" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.save" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab save" + ChatColor.WHITE + " and " +
                 ChatColor.AQUA + "/ab saverecent");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.send.self" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.send.self" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to yourself");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.send.others" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.send.others" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to others");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.prefix" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.prefix" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab prefix");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.consoletoggle" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.consoletoggle" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab sendtoconsole");
-        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.sound" +
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.sound" +
                 ChatColor.WHITE + " : allows the use of the -sound argument");
+    }
+    
+    @Subcommand("plugin")
+    @Description("Information about the plugin.")
+    public void onActionBarPlugin(CommandSender sender) {
+        sender.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "BarsOfAction" + ChatColor.RESET + " " +
+                ChatColor.GREEN + BarsOfAction.VERSION);
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Create and send " + BarsOfAction.ACTIONBAR +
+                ChatColor.GRAY + "s with ease!");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Developed by " + ChatColor.GOLD + "vyketype");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "GitHub" + ChatColor.RED + "vyketype");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Discord" + ChatColor.BLUE + "vyketype" +
+                ChatColor.GRAY + "#3472");
     }
 
     @Subcommand("list")
