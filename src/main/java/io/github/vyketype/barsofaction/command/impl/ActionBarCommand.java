@@ -53,6 +53,8 @@ public class ActionBarCommand extends BaseCommand {
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab prefix");
         sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.consoletoggle" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab sendtoconsole");
+        sender.sendMessage(ChatColor.DARK_GRAY + "> " + ChatColor.GREEN + "actionbar.sound" +
+                ChatColor.WHITE + " : allows the use of the -sound argument");
     }
 
     @Subcommand("list")

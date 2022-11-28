@@ -110,6 +110,12 @@ public record ActionBar(UUID creator, String name, String content) {
         // -SOUND ARGUMENT
         if (args.length > 2) {
             if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase("-sound")) {
+                // CHECK PERMISSION
+                if (!sender.hasPermission("actionbar.sound")) {
+                    ErrorUtil.error(sender, "You do not have the permission to send sounds with ActionBar messages!");
+                    return;
+                }
+                
                 // CHECKING FOR A PITCH ARGUMENT
                 if (args[args.length - 2].equalsIgnoreCase("-sound")) {
                     sound = args[args.length - 1].toUpperCase().replace('.', '_');
