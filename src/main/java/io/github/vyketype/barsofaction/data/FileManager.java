@@ -58,6 +58,7 @@ public class FileManager {
     public @Nullable ActionBar getBar(String name) {
         if (plugin.getSavedBars().getConfigurationSection("actionBars." + name) == null) return null;
         return new ActionBar(
+                plugin,
                 UUID.fromString(plugin.getSavedBars().getString("actionBars." + name + ".creator")),
                 name,
                 plugin.getSavedBars().getString("actionBars." + name + ".content")

@@ -99,7 +99,7 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("broadcast|bc")
-    @Syntax("<text || -get [savename]> [-sound <sound>] [pitch]")
+    @Syntax("<text || -get [savename]> [-sound <sound> [pitch]] [-noprefix]")
     @Description("Broadcast an ActionBar.")
     @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
@@ -107,7 +107,7 @@ public class ActionBarCommand extends BaseCommand {
     }
 
     @Subcommand("send")
-    @Syntax("<target> <text || -get [savename]> [-sound <sound>] [pitch]")
+    @Syntax("<target> <text || -get [savename]> [-sound <sound> [pitch]] [-noprefix]")
     @CommandCompletion("@players")
     @Description("Send an ActionBar to a player.")
     public void onActionBarSend(Player player, String strArgs) {
@@ -149,7 +149,7 @@ public class ActionBarCommand extends BaseCommand {
 
         if (!ActionBar.checkIfExists(plugin, player, name)) return;
 
-        plugin.getFileManager().saveBar(new ActionBar(player.getUniqueId(), prefix + name, message));
+        plugin.getFileManager().saveBar(new ActionBar(plugin, player.getUniqueId(), prefix + name, message));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
@@ -182,7 +182,7 @@ public class ActionBarCommand extends BaseCommand {
 
         if (!ActionBar.checkIfExists(plugin, player, name)) return;
     
-        plugin.getFileManager().saveBar(new ActionBar(uuid, name, plugin.getHandler().getRecents().get(uuid)));
+        plugin.getFileManager().saveBar(new ActionBar(plugin, uuid, name, plugin.getHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
