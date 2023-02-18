@@ -37,7 +37,7 @@ public class ActionBarCommand extends BaseCommand {
     @Subcommand("permissions|perms")
     @Description("List all permissions for this plugin.")
     public void onActionBarPerms(CommandSender sender) {
-        sender.sendMessage(BarsOfAction.NAMESPACE + "Getting the permissions for this plugin...");
+        sender.sendMessage(BarsOfAction.NAMESPACE + "Here are the permissions used in this plugin.");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.broadcast" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab broadcast");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.delete" +
@@ -53,21 +53,23 @@ public class ActionBarCommand extends BaseCommand {
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab prefix");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.consoletoggle" +
                 ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab sendtoconsole");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.sound" +
-                ChatColor.WHITE + " : allows the use of the -sound argument");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.sound" + ChatColor.WHITE +
+                " : allows the use of the " + ChatColor.AQUA + "-sound" + ChatColor.WHITE + " argument");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.noprefix" + ChatColor.WHITE +
+                " : allows the use of the " + ChatColor.AQUA + "-noprefix" + ChatColor.WHITE + " argument");
     }
     
     @Subcommand("plugin")
     @Description("Information about the plugin.")
     public void onActionBarPlugin(CommandSender sender) {
-        sender.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "BarsOfAction" + ChatColor.RESET + " " +
-                ChatColor.GREEN + BarsOfAction.VERSION);
+        sender.sendMessage(ChatColor.DARK_AQUA + "BarsOfAction" + ChatColor.RESET + " " + ChatColor.GREEN +
+                BarsOfAction.VERSION);
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Create and send " + BarsOfAction.ACTIONBAR +
                 ChatColor.GRAY + "s with ease!");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Developed by " + ChatColor.GOLD + "vyketype");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "GitHub" + ChatColor.RED + "vyketype");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Discord" + ChatColor.BLUE + "vyketype" +
-                ChatColor.GRAY + "#3472");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "GitHub: " + ChatColor.RED + "vyketype");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Discord: " + ChatColor.BLUE + "vyketype" +
+                ChatColor.GRAY + "#" + ChatColor.AQUA + "3472");
     }
 
     @Subcommand("list")

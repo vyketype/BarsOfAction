@@ -155,12 +155,14 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
             }
             
             prefix = false;
+            content = content.substring(0, content.lastIndexOf(" "));
         }
     
         // ESCAPE SEQUENCES
         if (content.contains("\\-sound") || content.contains("\\-get")) {
             content = content.replace("\\-sound", "-sound");
             content = content.replace("\\-get", "-get");
+            content = content.replace("\\-noprefix", "-noprefix");
         }
     
         new ActionBar(
