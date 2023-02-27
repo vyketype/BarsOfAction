@@ -23,7 +23,7 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.of("#5abbba") + ChatColor.BOLD + "R" +
             ChatColor.RESET;
     public static String NAMESPACE = "" + ACTIONBAR + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
-    public static String VERSION = "v1.3.2";
+    public static String VERSION = "v1.4-SNAPSHOT";
 
     @Getter
     private Config savedBars;
