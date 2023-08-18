@@ -12,6 +12,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -21,19 +22,30 @@ import java.util.UUID;
  */
 public record ActionBar(BarsOfAction plugin, UUID creator, String name, String content) {
     /**
-     * Sends the ActionBar to a player.
+     * Sends the ActionBar to a player with a sound.
      *
      * @param player The player to whom the ActionBar should be sent.
      * @param sound  The sound to play when the ActionBar is sent.
      * @param pitch  The pitch to play the sound.
+     * @param prefix If the ActionBar prefix should be included.
      */
     public void send(Player player, String sound, float pitch, boolean prefix) {
+        send(player, prefix);
+        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 1, pitch);
+    }
+    
+    /**
+     * Sends the ActionBar to a player.
+     *
+     * @param player The player to whom the ActionBar should be sent.
+     * @param prefix If the ActionBar prefix should be included.
+     */
+    public void send(Player player, boolean prefix) {
         String prefixText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
         if (!prefix) {
             prefixText = "";
         }
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefixText + content));
-        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 1, pitch);
     }
     
     public void handleSending(Player player, String sound, float pitch, @Nullable Player target, boolean prefix) {
@@ -52,12 +64,20 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                send(p, sound, pitch, prefix);
+                if (Objects.equals(sound, "")) {
+                    send(player, prefix);
+                } else {
+                    send(p, sound, pitch, prefix);
+                }
             }
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully broadcast" + ChatColor.GRAY + ".");
         } else {
-            send(target, sound, pitch, prefix);
+            if (Objects.equals(sound, "")) {
+                send(player, prefix);
+            } else {
+                send(target, sound, pitch, prefix);
+            }
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully sent" + ChatColor.GRAY + ".");
         }
@@ -94,7 +114,7 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         String[] args = StringUtils.split(strArgs, " ", -1);
         
         String content;
-        String sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
+        @Nullable String sound = "";
         float pitch = 1F;
         boolean get = false;
         boolean prefix = true;
