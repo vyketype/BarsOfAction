@@ -88,7 +88,7 @@ actionbar.cooldown.bypass (bypass any cooldowns)
                         ChatColor.RED + seconds + " seconds " + ChatColor.GRAY + "by " + ChatColor.GOLD +
                         sender.getName() + ChatColor.GRAY + ".");
             }
-            onlinePlayer.playSound(onlinePlayer.getLocation(), "block.note_block.bass", 100, 1F);
+            onlinePlayer.playSound(onlinePlayer.getLocation(), "block.note_block.bass", 1, 1F);
         }
     }
     
@@ -102,7 +102,7 @@ actionbar.cooldown.bypass (bypass any cooldowns)
                 Player target = offlineTarget.getPlayer();
                 sender.sendMessage(BarsOfAction.NAMESPACE + "Your ActionBar cooldown was " + ChatColor.GREEN +
                         "removed" + ChatColor.GRAY + ".");
-                target.playSound(target.getLocation(), "block.note_block.bass", 100, 1F);
+                target.playSound(target.getLocation(), "block.note_block.bass", 1, 1F);
             }
         } else {
             plugin.getCooldownHandler().getPlayerCooldowns().put(offlineTarget.getUniqueId(), seconds);
@@ -114,7 +114,7 @@ actionbar.cooldown.bypass (bypass any cooldowns)
                 target.sendMessage(BarsOfAction.NAMESPACE + "You were placed on ActionBar " + ChatColor.RED +
                         "cooldown " + ChatColor.GRAY + "for " + ChatColor.GOLD + seconds + " seconds" +
                         ChatColor.GRAY + ".");
-                target.playSound(target.getLocation(), "block.note_block.bass", 100, 1F);
+                target.playSound(target.getLocation(), "block.note_block.bass", 1, 1F);
             }
         }
     }

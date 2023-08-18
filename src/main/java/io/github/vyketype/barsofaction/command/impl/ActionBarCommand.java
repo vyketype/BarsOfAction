@@ -201,12 +201,12 @@ public class ActionBarCommand extends BaseCommand {
         if (plugin.getConfig().getBoolean("sendToConsole")) {
             plugin.getConfig().set("sendToConsole", false);
             if (sender instanceof Player player) {
-                player.playSound(player.getLocation(), "block.note_block.bass", 100, 1F);
+                player.playSound(player.getLocation(), "block.note_block.bass", 1, 1F);
             }
         } else {
             plugin.getConfig().set("sendToConsole", true);
             if (sender instanceof Player player) {
-                player.playSound(player.getLocation(), "block.note_block.bass", 100, 2F);
+                player.playSound(player.getLocation(), "block.note_block.bass", 1, 2F);
             }
         }
         plugin.getConfig().save();

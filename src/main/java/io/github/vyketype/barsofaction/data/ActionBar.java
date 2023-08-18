@@ -33,7 +33,7 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
             prefixText = "";
         }
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefixText + content));
-        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100F, pitch);
+        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 1, pitch);
     }
     
     public void handleSending(Player player, String sound, float pitch, @Nullable Player target, boolean prefix) {
