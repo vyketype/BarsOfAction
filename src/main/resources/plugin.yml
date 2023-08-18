@@ -4,4 +4,4 @@ main: io.github.vyketype.barsofaction.BarsOfAction
 version: 1.4-SNAPSHOT
 api-version: 1.19
 author: vyketype
-# website: vyketype.github.io/barsofaction
+website: https://github.com/vyketype/BarsOfAction
