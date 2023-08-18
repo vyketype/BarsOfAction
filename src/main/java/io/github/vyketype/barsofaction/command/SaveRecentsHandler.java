@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SaveRecentHandler {
+public class SaveRecentsHandler {
     @Getter
     private final Map<UUID, String> recents = new HashMap<>();
 }

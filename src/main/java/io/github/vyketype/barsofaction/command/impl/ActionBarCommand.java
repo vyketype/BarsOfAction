@@ -177,14 +177,14 @@ public class ActionBarCommand extends BaseCommand {
         UUID uuid = player.getUniqueId();
 
         // CHECKING IF THERE ARE ANY RECENT BARS BY THE PLAYER
-        if (!plugin.getHandler().getRecents().containsKey(uuid)) {
+        if (!plugin.getRecentsHandler().getRecents().containsKey(uuid)) {
             ErrorUtil.error(player, "You haven't sent an ActionBar recently!");
             return;
         }
 
         if (!ActionBar.checkIfExists(plugin, player, name)) return;
     
-        plugin.getFileManager().saveBar(new ActionBar(plugin, uuid, name, plugin.getHandler().getRecents().get(uuid)));
+        plugin.getFileManager().saveBar(new ActionBar(plugin, uuid, name, plugin.getRecentsHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }

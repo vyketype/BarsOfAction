@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 /**
- * Represents a saveable ActionBar.
+ * Represents a savable ActionBar.
  *
  * @author vyketype
  */
@@ -43,7 +43,7 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         }
     
         // ADD TO HANDLER
-        plugin.getHandler().getRecents().put(player.getUniqueId(), content);
+        plugin.getRecentsHandler().getRecents().put(player.getUniqueId(), content);
     
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
