@@ -34,7 +34,7 @@ actionbar.cooldown.bypass (bypass any cooldowns)
     @HelpCommand
     @Default
     public void onActionBarCooldown(CommandHelp commandHelp) {
-          commandHelp.showHelp();
+        commandHelp.showHelp();
     }
     
     @Subcommand("query")
@@ -67,25 +67,33 @@ actionbar.cooldown.bypass (bypass any cooldowns)
                 ErrorUtil.error(sender, "Insufficient permissions!");
                 return;
             }
-            
-            plugin.getCooldownHandler().setPublicCooldownSeconds(seconds);
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (seconds <= 0) {
-                    onlinePlayer.sendMessage(BarsOfAction.NAMESPACE + "The global ActionBar cooldown has been turned " +
-                            ChatColor.GREEN + "off" + ChatColor.GRAY + ".");
-                } else {
-                    onlinePlayer.sendMessage(BarsOfAction.NAMESPACE + "A global ActionBar cooldown has been set for " +
-                            ChatColor.RED + seconds + " seconds " + ChatColor.GRAY + "by " + ChatColor.GOLD +
-                            sender.getName() + ChatColor.GRAY + ".");
-                }
-                onlinePlayer.playSound(onlinePlayer.getLocation(), "block.note_block.bass", 100, 1F);
-            }
-            
+            handleGlobalCooldown(sender, seconds);
             return;
         }
-    
-        OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
         
+        OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
+        handlePlayerCooldown(sender, offlineTarget, seconds);
+    }
+    
+    private void handleGlobalCooldown(CommandSender sender, int seconds) {
+        plugin.getCooldownHandler().setPublicCooldownSeconds(seconds);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (seconds <= 0) {
+                onlinePlayer.sendMessage(BarsOfAction.NAMESPACE + "The global ActionBar cooldown has " +
+                        "been turned " +
+                        ChatColor.GREEN + "off" + ChatColor.GRAY + ".");
+            } else {
+                onlinePlayer.sendMessage(BarsOfAction.NAMESPACE + "A global ActionBar cooldown has been" +
+                        " set for " +
+                        ChatColor.RED + seconds + " seconds " + ChatColor.GRAY + "by " + ChatColor.GOLD +
+                        sender.getName() + ChatColor.GRAY + ".");
+            }
+            onlinePlayer.playSound(onlinePlayer.getLocation(), "block.note_block.bass", 100, 1F);
+        }
+    }
+    
+    private void handlePlayerCooldown(CommandSender sender, OfflinePlayer offlineTarget, int seconds) {
+        String targetName = offlineTarget.getName();
         if (seconds <= 0) {
             plugin.getCooldownHandler().getPlayerCooldowns().remove(offlineTarget.getUniqueId());
             sender.sendMessage(BarsOfAction.NAMESPACE + "The ActionBar cooldown for " + ChatColor.LIGHT_PURPLE +

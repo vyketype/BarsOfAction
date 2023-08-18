@@ -20,10 +20,10 @@ import java.util.Objects;
  */
 public class Config extends YamlConfiguration {
     private final BarsOfAction plugin;
-
+    
     private final File file;
     private final String localDefaultsName;
-
+    
     public Config(BarsOfAction plugin, File file, String localDefaultsName) {
         this.plugin = plugin;
         this.file = file;
@@ -40,7 +40,7 @@ public class Config extends YamlConfiguration {
         }
         createIfNotExists();
     }
-
+    
     /**
      * Saves the updated YAML file.
      */
@@ -52,7 +52,7 @@ public class Config extends YamlConfiguration {
             plugin.getLogger().warning("Failed to save file " + file.getName() + ".");
         }
     }
-
+    
     /**
      * Loads/reloads the existing YAML file.
      */
@@ -64,7 +64,7 @@ public class Config extends YamlConfiguration {
             plugin.getLogger().warning("Failed to load file " + file.getName() + ".");
         }
     }
-
+    
     /**
      * Creates a YAML file if the specified file does not exist already.
      */
@@ -73,12 +73,12 @@ public class Config extends YamlConfiguration {
             reload();
             return;
         }
-
+        
         if (localDefaultsName == null) {
             save();
             return;
         }
-
+        
         try {
             FileUtils.copyInputStreamToFile(Objects.requireNonNull(plugin.getResource(localDefaultsName)), file);
         } catch (IOException e) {

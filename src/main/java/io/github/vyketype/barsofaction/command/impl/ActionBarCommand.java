@@ -19,21 +19,21 @@ import java.util.UUID;
 @CommandAlias("actionbar|ab")
 public class ActionBarCommand extends BaseCommand {
     private final BarsOfAction plugin;
-
+    
     public ActionBarCommand(BarsOfAction plugin) {
         this.plugin = plugin;
     }
-
+    
     // --------------------------------------------------------------------------------
     // COMMAND/SUBCOMMAND HANDLERS
     // --------------------------------------------------------------------------------
-
+    
     @HelpCommand
     @Default
     public void onActionBar(CommandHelp commandHelp) {
         commandHelp.showHelp();
     }
-
+    
     @Subcommand("permissions|perms")
     @Description("List all permissions for this plugin.")
     public void onActionBarPerms(CommandSender sender) {
@@ -66,12 +66,13 @@ public class ActionBarCommand extends BaseCommand {
                 BarsOfAction.VERSION);
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Create and send " + BarsOfAction.ACTIONBAR +
                 ChatColor.GRAY + "s with ease!");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Developed by " + ChatColor.GOLD + "vyketype");
+        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Developed by " + ChatColor.GOLD +
+                "vyketype");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "GitHub: " + ChatColor.RED + "vyketype");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Discord: " + ChatColor.BLUE + "vyketype" +
                 ChatColor.GRAY + "#" + ChatColor.AQUA + "3472");
     }
-
+    
     @Subcommand("list")
     @Syntax("[page]")
     @Description("List all saved ActionBars.")
@@ -81,25 +82,25 @@ public class ActionBarCommand extends BaseCommand {
             ErrorUtil.error(sender, "There are no saved ActionBars.");
             return;
         }
-
+        
         // CHECKING IF NO PAGE ARGUMENT IS GIVEN
         if (page == null) {
             showListPage(sender, 1);
             return;
         }
-
+        
         // CHECKING IF THE PAGE EXISTS
         int size = plugin.getFileManager().getSavedBars().size();
         int pages = (int) Math.ceil(size / 7.0);
-
+        
         if (page > pages || page < 1) {
             ErrorUtil.error(sender, "This page does not exist!");
             return;
         }
-
+        
         showListPage(sender, page);
     }
-
+    
     @Subcommand("broadcast|bc")
     @Syntax("<text || -get [savename]> [-sound <sound> [pitch]] [-noprefix]")
     @Description("Broadcast an ActionBar.")
@@ -107,7 +108,7 @@ public class ActionBarCommand extends BaseCommand {
     public void onActionBarBroadcast(Player player, String strArgs) {
         ActionBar.register(plugin, player, strArgs, null);
     }
-
+    
     @Subcommand("send")
     @Syntax("<target> <text || -get [savename]> [-sound <sound> [pitch]] [-noprefix]")
     @CommandCompletion("@players")
@@ -116,29 +117,29 @@ public class ActionBarCommand extends BaseCommand {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
         OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
-
+        
         // CHECKING IF PLAYER IS ONLINE
         if (!target.isOnline()) {
             ErrorUtil.error(player, "This player isn't online!");
             return;
         }
-
+        
         // CHECKING PERMISSION FOR OTHERS
         if (!player.hasPermission("actionbar.send.others") && !Objects.equals(target.getName(), player.getName())) {
             ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to others!");
             return;
         }
-
+        
         // CHECKING PERMISSION FOR SELF
         if (!player.hasPermission("actionbar.send.self") && Objects.equals(target.getName(), player.getName())) {
             ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to yourself!");
             return;
         }
-
+        
         String[] newArgs = strArgs.split(" ", 2);
         ActionBar.register(plugin, player, newArgs[1], target.getPlayer());
     }
-
+    
     @Subcommand("save")
     @Syntax("<message> <name>")
     @Description("Save a custom ActionBar.")
@@ -148,14 +149,15 @@ public class ActionBarCommand extends BaseCommand {
         String message = StringUtils.join(args, " ", 0, args.length - 1);
         String name = args[args.length - 1];
         String prefix = plugin.getConfig().getString("prefix");
-
-        if (!ActionBar.checkIfExists(plugin, player, name)) return;
-
+        
+        if (!ActionBar.checkIfExists(plugin, player, name))
+              return;
+        
         plugin.getFileManager().saveBar(new ActionBar(plugin, player.getUniqueId(), prefix + name, message));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
                 "this ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
     }
-
+    
     @Subcommand("delete")
     @Syntax("<name>")
     @Description("Delete a saved ActionBar.")
@@ -168,25 +170,28 @@ public class ActionBarCommand extends BaseCommand {
             ErrorUtil.error(sender, "No such ActionBar exists!");
         }
     }
-
+    
     @Subcommand("saverecent")
     @Syntax("<name>")
     @Description("Save the most recent ActionBar you sent.")
     @CommandPermission("actionbar.save")
     public void onActionBarSaveRecent(Player player, String name) {
         UUID uuid = player.getUniqueId();
-
+        
         // CHECKING IF THERE ARE ANY RECENT BARS BY THE PLAYER
         if (!plugin.getRecentsHandler().getRecents().containsKey(uuid)) {
             ErrorUtil.error(player, "You haven't sent an ActionBar recently!");
             return;
         }
-
-        if (!ActionBar.checkIfExists(plugin, player, name)) return;
-    
-        plugin.getFileManager().saveBar(new ActionBar(plugin, uuid, name, plugin.getRecentsHandler().getRecents().get(uuid)));
+        
+        if (!ActionBar.checkIfExists(plugin, player, name))
+              return;
+        
+        plugin.getFileManager().saveBar(new ActionBar(plugin, uuid, name,
+                plugin.getRecentsHandler().getRecents().get(uuid)));
         player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GREEN + "Successfully saved " + ChatColor.GRAY +
-                "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY + ".");
+                "your recent ActionBar with the name " + ChatColor.AQUA + "\"" + name + "\"" + ChatColor.GRAY +
+                ".");
     }
     
     @Subcommand("sendtoconsole")
@@ -210,17 +215,17 @@ public class ActionBarCommand extends BaseCommand {
                 (plugin.getConfig().getBoolean("sendToConsole") ? ChatColor.GREEN + "true" : ChatColor.RED + "false") +
                 ChatColor.GRAY + ".");
     }
-
+    
     // --------------------------------------------------------------------------------
     // DISPLAYING LISTS
     // --------------------------------------------------------------------------------
-
+    
     private void showListPage(CommandSender sender, int page) {
         // EACH PAGE WILL HAVE 7 ENTRIES
         int size = plugin.getFileManager().getSavedBars().size();
         int pages = (int) Math.ceil(size / 7.0);
         int limit = Math.min(7 * page, size);
-
+        
         sender.sendMessage(BarsOfAction.NAMESPACE + "Retrieving saved ActionBars...");
         for (int i = (page - 1) * 7 + 1; i <= limit; i++) {
             sender.sendMessage(plugin.getFileManager().getSavedBars().get(i - 1).toString());

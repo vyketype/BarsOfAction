@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class FileManager {
     private final BarsOfAction plugin;
-
+    
     public FileManager(BarsOfAction plugin) {
         this.plugin = plugin;
     }
@@ -24,7 +24,7 @@ public class FileManager {
         plugin.getConfig().set("prefix", text);
         plugin.getConfig().save();
     }
-
+    
     /**
      * Saves the ActionBar in savedbars.yml.
      *
@@ -35,7 +35,7 @@ public class FileManager {
         plugin.getSavedBars().set("actionBars." + bar.name() + ".content", bar.content());
         plugin.getSavedBars().save();
     }
-
+    
     /**
      * Delete a saved ActionBar from savedbars.yml using a name.
      *
@@ -43,12 +43,13 @@ public class FileManager {
      * @return True if the operation was successful.
      */
     public boolean deleteBar(String name) {
-        if (plugin.getSavedBars().getConfigurationSection("actionBars." + name) == null) return false;
+        if (plugin.getSavedBars().getConfigurationSection("actionBars." + name) == null)
+            return false;
         plugin.getSavedBars().set("actionBars." + name, null);
         plugin.getSavedBars().save();
         return true;
     }
-
+    
     /**
      * Gets an ActionBar from savedbars.yml using a name.
      *
@@ -56,7 +57,8 @@ public class FileManager {
      * @return Retrieved ActionBar or null if none exists.
      */
     public @Nullable ActionBar getBar(String name) {
-        if (plugin.getSavedBars().getConfigurationSection("actionBars." + name) == null) return null;
+        if (plugin.getSavedBars().getConfigurationSection("actionBars." + name) == null)
+            return null;
         return new ActionBar(
                 plugin,
                 UUID.fromString(plugin.getSavedBars().getString("actionBars." + name + ".creator")),
@@ -64,7 +66,7 @@ public class FileManager {
                 plugin.getSavedBars().getString("actionBars." + name + ".content")
         );
     }
-
+    
     /**
      * Gets the list of all saved ActionBars from savedbars.yml.
      *
@@ -75,11 +77,11 @@ public class FileManager {
         Set<String> actionBars = Objects.requireNonNull(
                 plugin.getSavedBars().getConfigurationSection("actionBars")
         ).getKeys(false);
-
+        
         for (String name : actionBars) {
             list.add(getBar(name));
         }
-
+        
         return list;
     }
 }

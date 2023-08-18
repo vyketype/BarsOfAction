@@ -24,12 +24,14 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
      * Sends the ActionBar to a player.
      *
      * @param player The player to whom the ActionBar should be sent.
-     * @param sound The sound to play when the ActionBar is sent.
-     * @param pitch The pitch to play the sound.
+     * @param sound  The sound to play when the ActionBar is sent.
+     * @param pitch  The pitch to play the sound.
      */
     public void send(Player player, String sound, float pitch, boolean prefix) {
         String prefixText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
-        if (!prefix) prefixText = "";
+        if (!prefix) {
+            prefixText = "";
+        }
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefixText + content));
         player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 100F, pitch);
     }
@@ -38,27 +40,29 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         // SEND TO CONSOLE
         if (plugin.getConfig().getBoolean("sendToConsole")) {
             String prefixText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
-            if (!prefix) prefixText = "";
+            if (!prefix) {
+                prefixText = "";
+            }
             plugin.getLogger().info("ActionBar message by " + player.getName() + " : " + prefixText + content);
         }
-    
+        
         // ADD TO HANDLER
         plugin.getRecentsHandler().getRecents().put(player.getUniqueId(), content);
-    
+        
         // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
         if (target == null) {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 send(p, sound, pitch, prefix);
             }
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
-                    "successfully broadcast" + ChatColor.GRAY  + ".");
+                    "successfully broadcast" + ChatColor.GRAY + ".");
         } else {
             send(target, sound, pitch, prefix);
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
-                    "successfully sent" + ChatColor.GRAY  + ".");
+                    "successfully sent" + ChatColor.GRAY + ".");
         }
     }
-
+    
     @Override
     public String toString() {
         // > template : by vPrototype_
@@ -71,7 +75,7 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
      *
      * @param plugin An instance of the plugin.
      * @param player The player who created the ActionBar.
-     * @param name The name to check for.
+     * @param name   The name to check for.
      * @return True if an ActionBar with a certain name exists.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -88,55 +92,61 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
     
     public static void register(BarsOfAction plugin, Player sender, String strArgs, @Nullable Player target) {
         String[] args = StringUtils.split(strArgs, " ", -1);
-    
+        
         String content;
         String sound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP.name();
         float pitch = 1F;
         boolean get = false;
         boolean prefix = true;
-    
+        
         // -GET ARGUMENT
         if (args[0].equalsIgnoreCase("-get")) {
             String name = args[1];
             @Nullable ActionBar bar = plugin.getFileManager().getBar(name);
-        
+            
             if (bar == null) {
                 ErrorUtil.error(sender, "No such ActionBar exists!");
                 return;
             }
-        
+            
             content = bar.content();
             get = true;
         } else {
             content = strArgs;
         }
-    
+        
         // -SOUND ARGUMENT
         if (args.length > 2) {
-            if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase("-sound")) {
+            if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase(
+                    "-sound")) {
                 // CHECK PERMISSION
                 if (!sender.hasPermission("actionbar.sound")) {
-                    ErrorUtil.error(sender, "You do not have the permission to send sounds with ActionBar messages!");
+                    ErrorUtil.error(sender, "You do not have the permission to send sounds with ActionBar " +
+                            "messages!");
                     return;
                 }
                 
                 // CHECKING FOR A PITCH ARGUMENT
                 if (args[args.length - 2].equalsIgnoreCase("-sound")) {
                     sound = args[args.length - 1].toUpperCase().replace('.', '_');
-                    if (!get) content = StringUtils.join(args, " ", 0, args.length - 2);
+                    if (!get) {
+                        content = StringUtils.join(args, " ", 0, args.length - 2);
+                    }
                 } else if (args[args.length - 3].equalsIgnoreCase("-sound")) {
                     sound = args[args.length - 2].toUpperCase().replace('.', '_');
-                    if (!get) content = StringUtils.join(args, " ", 0, args.length - 2);
-                
+                    if (!get) {
+                        content = StringUtils.join(args, " ", 0, args.length - 2);
+                    }
+                    
                     try {
                         Double.parseDouble(args[args.length - 1]);
                     } catch (NumberFormatException badNumber) {
                         ErrorUtil.error(sender, "This is not a decimal number!");
                     }
-                
+                    
                     pitch = Float.parseFloat(args[args.length - 1]);
                 }
-            
+                
                 // CHECKS IF THE SOUND EXISTS
                 try {
                     Sound.valueOf(sound);
@@ -150,26 +160,28 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         // -NOPREFIX ARGUMENT
         if (args[args.length - 1].equalsIgnoreCase("-noprefix")) {
             if (!sender.hasPermission("actionbar.noprefix")) {
-                ErrorUtil.error(sender, "You do not have the permission to send ActionBars without their prefix!");
+                ErrorUtil.error(sender, "You do not have the permission to send ActionBars without their " +
+                        "prefix!");
                 return;
             }
             
             prefix = false;
             content = content.substring(0, content.lastIndexOf(" "));
         }
-    
+        
         // ESCAPE SEQUENCES
         if (content.contains("\\-sound") || content.contains("\\-get")) {
             content = content.replace("\\-sound", "-sound");
             content = content.replace("\\-get", "-get");
             content = content.replace("\\-noprefix", "-noprefix");
         }
-    
-        new ActionBar(
+        
+        ActionBar actionBar = new ActionBar(
                 plugin,
                 sender.getUniqueId(),
                 RandomStringUtils.randomAlphanumeric(9),
                 ChatColor.translateAlternateColorCodes('&', content)
-        ).handleSending(sender, sound, pitch, target, prefix);
+        );
+        actionBar.handleSending(sender, sound, pitch, target, prefix);
     }
 }

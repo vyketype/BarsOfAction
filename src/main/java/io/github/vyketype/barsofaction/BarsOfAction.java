@@ -26,25 +26,26 @@ public class BarsOfAction extends JavaPlugin {
             ChatColor.RESET;
     public static String NAMESPACE = ACTIONBAR + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "";
     public static String VERSION = "v1.4-SNAPSHOT";
-
+    
     private Config savedBars;
     private Config config;
-
+    
     private FileManager fileManager;
     private SaveRecentsHandler recentsHandler;
     private CooldownHandler cooldownHandler;
     private CommandManager commandManager;
-
+    
     @Override
     public void onEnable() {
         try {
-            savedBars = new Config(this, new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"), "savedbars.yml");
+            savedBars = new Config(this, new File(getDataFolder().getAbsolutePath() + "/savedbars.yml"),
+                    "savedbars.yml");
             config = new Config(this, new File(getDataFolder().getAbsolutePath() + "/config.yml"), "config.yml");
             fileManager = new FileManager(this);
             recentsHandler = new SaveRecentsHandler();
             cooldownHandler = new CooldownHandler();
             commandManager = new CommandManager(this);
-
+            
             getLogger().info("Successfully loaded BarsOfAction " + VERSION + " by vyketype");
             
             String prefix = Objects.requireNonNull(config.getString("prefix"));
@@ -57,7 +58,7 @@ public class BarsOfAction extends JavaPlugin {
             getLogger().info("Failed to load BarsOfAction " + VERSION);
         }
     }
-
+    
     @Override
     public void onDisable() {
         getLogger().info("Disabled BarsOfAction " + VERSION + " by vyketype");

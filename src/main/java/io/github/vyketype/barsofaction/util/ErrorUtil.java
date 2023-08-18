@@ -13,12 +13,13 @@ public class ErrorUtil {
     /**
      * Sends an error message to a player and plays a sound.
      *
-     * @param sender The player to send the message.
+     * @param sender  The player to send the message.
      * @param message The message to send.
      */
     public static void error(CommandSender sender, String message) {
         sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.RED + message);
-        if (sender instanceof Player player)
+        if (sender instanceof Player player) {
             player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 100, 0.5F);
+        }
     }
 }
