@@ -7,6 +7,8 @@ import io.github.vyketype.barsofaction.BarsOfAction;
 import io.github.vyketype.barsofaction.data.ActionBar;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -62,15 +64,19 @@ public class ActionBarCommand extends BaseCommand {
     @Subcommand("plugin")
     @Description("Information about the plugin.")
     public void onActionBarPlugin(CommandSender sender) {
+        TextComponent website = new TextComponent(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "GitHub: " +
+                ChatColor.RED + "https://github.com/vyketype/BarsOfAction");
+        website.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/vyketype/BarsOfAction"));
+        
         sender.sendMessage(ChatColor.DARK_AQUA + "BarsOfAction" + ChatColor.RESET + " " + ChatColor.GREEN +
                 BarsOfAction.VERSION);
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Create and send " + BarsOfAction.ACTIONBAR +
                 ChatColor.GRAY + "s with ease!");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Developed by " + ChatColor.GOLD +
                 "vyketype");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "GitHub: " + ChatColor.RED + "vyketype");
         sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GRAY + "Discord: " + ChatColor.BLUE + "vyketype" +
                 ChatColor.GRAY + "#" + ChatColor.AQUA + "3472");
+        sender.spigot().sendMessage(website);
     }
     
     @Subcommand("list")
