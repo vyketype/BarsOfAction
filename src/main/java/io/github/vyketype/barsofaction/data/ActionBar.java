@@ -2,6 +2,7 @@ package io.github.vyketype.barsofaction.data;
 
 import io.github.vyketype.barsofaction.BarsOfAction;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
+import io.github.vyketype.barsofaction.util.Permission;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -140,7 +141,7 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
             if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase(
                     "-sound")) {
                 // CHECK PERMISSION
-                if (!sender.hasPermission("actionbar.sound")) {
+                if (!sender.hasPermission(Permission.ACTIONBAR_SOUND.getName())) {
                     ErrorUtil.error(sender, "You do not have the permission to send sounds with ActionBar " +
                             "messages!");
                     return;
@@ -179,7 +180,7 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         
         // -NOPREFIX ARGUMENT
         if (args[args.length - 1].equalsIgnoreCase("-noprefix")) {
-            if (!sender.hasPermission("actionbar.noprefix")) {
+            if (!sender.hasPermission(Permission.ACTIONBAR_NOPREFIX.getName())) {
                 ErrorUtil.error(sender, "You do not have the permission to send ActionBars without their " +
                         "prefix!");
                 return;

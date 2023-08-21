@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.*;
 import io.github.vyketype.barsofaction.BarsOfAction;
 import io.github.vyketype.barsofaction.data.ActionBar;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
+import io.github.vyketype.barsofaction.util.Permission;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -40,25 +41,10 @@ public class ActionBarCommand extends BaseCommand {
     @Description("List all permissions for this plugin.")
     public void onActionBarPerms(CommandSender sender) {
         sender.sendMessage(BarsOfAction.NAMESPACE + "Here are the permissions used in this plugin.");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.broadcast" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab broadcast");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.delete" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab delete");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.save" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab save" + ChatColor.WHITE + " and " +
-                ChatColor.AQUA + "/ab saverecent");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.send.self" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to yourself");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.send.others" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab send" + ChatColor.WHITE + " to others");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.prefix" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab prefix");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.consoletoggle" +
-                ChatColor.WHITE + " : allows " + ChatColor.AQUA + "/ab sendtoconsole");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.sound" + ChatColor.WHITE +
-                " : allows the use of the " + ChatColor.AQUA + "-sound" + ChatColor.WHITE + " argument");
-        sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + "actionbar.noprefix" + ChatColor.WHITE +
-                " : allows the use of the " + ChatColor.AQUA + "-noprefix" + ChatColor.WHITE + " argument");
+        for (Permission permission : Permission.values()) {
+            sender.sendMessage(ChatColor.DARK_GRAY + "› " + ChatColor.GREEN + permission.getName() +
+                    ChatColor.WHITE + " : allows " + permission.getDescription());
+        }
     }
     
     @Subcommand("plugin")
@@ -110,8 +96,12 @@ public class ActionBarCommand extends BaseCommand {
     @Subcommand("broadcast|bc")
     @Syntax("<text || -get [savename]> [-sound <sound> [pitch]] [-noprefix]")
     @Description("Broadcast an ActionBar.")
-    @CommandPermission("actionbar.broadcast")
     public void onActionBarBroadcast(Player player, String strArgs) {
+        if (!player.hasPermission(Permission.ACTIONBAR_BROADCAST.getName())) {
+            ErrorUtil.error(player, "Insufficient permissions!");
+            return;
+        }
+        
         ActionBar.register(plugin, player, strArgs, null);
     }
     
@@ -131,13 +121,13 @@ public class ActionBarCommand extends BaseCommand {
         }
         
         // CHECKING PERMISSION FOR OTHERS
-        if (!player.hasPermission("actionbar.send.others") && !Objects.equals(target.getName(), player.getName())) {
+        if (!player.hasPermission(Permission.ACTIONBAR_SEND_OTHERS.getName()) && !Objects.equals(target.getName(), player.getName())) {
             ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to others!");
             return;
         }
         
         // CHECKING PERMISSION FOR SELF
-        if (!player.hasPermission("actionbar.send.self") && Objects.equals(target.getName(), player.getName())) {
+        if (!player.hasPermission(Permission.ACTIONBAR_SEND_SELF.getName()) && Objects.equals(target.getName(), player.getName())) {
             ErrorUtil.error(player, "You do not have the permission to send ActionBar messages to yourself!");
             return;
         }
@@ -149,8 +139,12 @@ public class ActionBarCommand extends BaseCommand {
     @Subcommand("save")
     @Syntax("<message> <name>")
     @Description("Save a custom ActionBar.")
-    @CommandPermission("actionbar.save")
     public void onActionBarSave(Player player, String strArgs) {
+        if (!player.hasPermission(Permission.ACTIONBAR_SAVE.getName())) {
+            ErrorUtil.error(player, "Insufficient permissions!");
+            return;
+        }
+        
         String[] args = StringUtils.split(strArgs, " ", -1);
         String message = StringUtils.join(args, " ", 0, args.length - 1);
         String name = args[args.length - 1];
@@ -169,6 +163,11 @@ public class ActionBarCommand extends BaseCommand {
     @Description("Delete a saved ActionBar.")
     @CommandPermission("actionbar.delete")
     public void onActionBarDelete(CommandSender sender, String name) {
+        if (!sender.hasPermission(Permission.ACTIONBAR_DELETE.getName())) {
+            ErrorUtil.error(sender, "Insufficient permissions!");
+            return;
+        }
+        
         if (plugin.getFileManager().deleteBar(name)) {
             sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GOLD + "Successfully deleted " + ChatColor.GRAY +
                     "the ActionBar with the name " + ChatColor.RED + "\"" + name + "\"" + ChatColor.GRAY + ".");
@@ -182,6 +181,11 @@ public class ActionBarCommand extends BaseCommand {
     @Description("Save the most recent ActionBar you sent.")
     @CommandPermission("actionbar.save")
     public void onActionBarSaveRecent(Player player, String name) {
+        if (!player.hasPermission(Permission.ACTIONBAR_SAVE.getName())) {
+            ErrorUtil.error(player, "Insufficient permissions!");
+            return;
+        }
+        
         UUID uuid = player.getUniqueId();
         
         // CHECKING IF THERE ARE ANY RECENT BARS BY THE PLAYER
@@ -204,6 +208,11 @@ public class ActionBarCommand extends BaseCommand {
     @Description("Toggle if sent ActionBars get sent to console.")
     @CommandPermission("actionbar.consoletoggle")
     public void onActionBarSendToConsole(CommandSender sender) {
+        if (!sender.hasPermission(Permission.ACTIONBAR_CONSOLETOGGLE.getName())) {
+            ErrorUtil.error(sender, "Insufficient permissions!");
+            return;
+        }
+        
         if (plugin.getConfig().getBoolean("sendToConsole")) {
             plugin.getConfig().set("sendToConsole", false);
             if (sender instanceof Player player) {

@@ -5,6 +5,7 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import io.github.vyketype.barsofaction.BarsOfAction;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
+import io.github.vyketype.barsofaction.util.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,14 +30,18 @@ public class ActionBarCooldownCommand extends BaseCommand {
     }
     
     @Subcommand("query")
-    @CommandPermission("actionbar.cooldown.query")
     @Syntax("[playerName]")
     @Description("View your current ActionBar cooldown and the global ActionBar cooldown. View another player's ActionBar cooldown by specifying their name.")
     public void onActionBarCooldownQuery(Player player, String targetName) {
         if (targetName != null) {
+            if (!player.hasPermission(Permission.ACTIONBAR_COOLDOWN_QUERY_OTHERS.getName())) {
+                ErrorUtil.error(player, "Insufficient permissions!");
+                return;
+            }
+            
             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
             
-            @Nullable Integer playerSeconds = plugin.getCooldownHandler().getPlayerCooldowns().get(player.getUniqueId());
+            @Nullable Integer playerSeconds = plugin.getCooldownHandler().getPlayerCooldowns().get(offlineTarget.getUniqueId());
             if (playerSeconds == null) {
                 ErrorUtil.error(player, "This player does not have any ActionBar cooldowns!");
                 return;
@@ -64,9 +69,13 @@ public class ActionBarCooldownCommand extends BaseCommand {
     
     @Subcommand("set")
     @Syntax("<playerName|-global> <timeSeconds>")
-    @CommandPermission("actionbar.cooldown.set")
     @Description("Set a cooldown for sending ActionBars, globally or player-specific. Set the <timeSeconds> argument to 0 to remove the cooldown.")
     public void onActionBarCooldownSet(CommandSender sender, String strArgs) {
+        if (!sender.hasPermission(Permission.ACTIONBAR_COOLDOWN_SET.getName())) {
+            ErrorUtil.error(sender, "Insufficient permissions!");
+            return;
+        }
+        
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
         
@@ -81,7 +90,7 @@ public class ActionBarCooldownCommand extends BaseCommand {
         int seconds = Integer.parseInt(args[1]);
         
         if (targetName.equalsIgnoreCase("-global")) {
-            if (!sender.hasPermission("actionbar.cooldown.global")) {
+            if (!sender.hasPermission(Permission.ACTIONBAR_COOLDOWN_SET_GLOBAL.getName())) {
                 ErrorUtil.error(sender, "Insufficient permissions!");
                 return;
             }
