@@ -11,21 +11,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 @CommandAlias("actionbar|ab")
 @Subcommand("cooldown")
 public class ActionBarCooldownCommand extends BaseCommand {
     private final BarsOfAction plugin;
-    
-    /*
-    COMMANDS
-/ab cooldown remove <playerName>
-/ab cooldown remove -global
-
-PERMISSIONS
-actionbar.cooldown.bypass (bypass any cooldowns)
-
-     */
     
     public ActionBarCooldownCommand(BarsOfAction plugin) {
         this.plugin = plugin;
@@ -39,15 +30,42 @@ actionbar.cooldown.bypass (bypass any cooldowns)
     
     @Subcommand("query")
     @CommandPermission("actionbar.cooldown.query")
-    @Description("View your current ActionBar cooldown, or the global ActionBar cooldown.")
-    public void onActionBarCooldownQuery(Player player) {
-        // TODO
+    @Syntax("[playerName]")
+    @Description("View your current ActionBar cooldown and the global ActionBar cooldown. View another player's ActionBar cooldown by specifying their name.")
+    public void onActionBarCooldownQuery(Player player, String targetName) {
+        if (targetName != null) {
+            OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
+            
+            @Nullable Integer playerSeconds = plugin.getCooldownHandler().getPlayerCooldowns().get(player.getUniqueId());
+            if (playerSeconds == null) {
+                ErrorUtil.error(player, "This player does not have any ActionBar cooldowns!");
+                return;
+            }
+            
+            player.sendMessage(BarsOfAction.NAMESPACE + targetName + "'s cooldown: " + playerSeconds);
+            return;
+        }
+        
+        String globalCooldown = ChatColor.GREEN + "none";
+        int globalSeconds = plugin.getCooldownHandler().getPublicCooldownSeconds();
+        if (globalSeconds > 0) {
+            globalCooldown = ChatColor.RED + "" + globalSeconds + " seconds";
+        }
+        
+        String playerCooldown = ChatColor.GREEN + "none";
+        @Nullable Integer playerSeconds = plugin.getCooldownHandler().getPlayerCooldowns().get(player.getUniqueId());
+        if (playerSeconds != null) {
+            playerCooldown = ChatColor.RED + "" + playerSeconds + " seconds";
+        }
+        
+        player.sendMessage(BarsOfAction.NAMESPACE + "Global Cooldown: " + globalCooldown);
+        player.sendMessage(BarsOfAction.NAMESPACE + "Player Cooldown: " + playerCooldown);
     }
     
     @Subcommand("set")
     @Syntax("<playerName|-global> <timeSeconds>")
     @CommandPermission("actionbar.cooldown.set")
-    @Description("Set a cooldown for sending ActionBars, globally or player-specific.")
+    @Description("Set a cooldown for sending ActionBars, globally or player-specific. Set the <timeSeconds> argument to 0 to remove the cooldown.")
     public void onActionBarCooldownSet(CommandSender sender, String strArgs) {
         String[] args = StringUtils.split(strArgs, " ", -1);
         String targetName = args[0];
