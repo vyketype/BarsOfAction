@@ -1,7 +1,6 @@
 package io.github.vyketype.barsofaction;
 
 import io.github.vyketype.barsofaction.command.CommandManager;
-import io.github.vyketype.barsofaction.command.CooldownHandler;
 import io.github.vyketype.barsofaction.command.SaveRecentsHandler;
 import io.github.vyketype.barsofaction.data.Config;
 import io.github.vyketype.barsofaction.data.FileManager;
@@ -35,7 +34,7 @@ public class BarsOfAction extends JavaPlugin {
     
     private FileManager fileManager;
     private SaveRecentsHandler recentsHandler;
-    private CooldownHandler cooldownHandler;
+//    private CooldownHandler cooldownHandler;
     private CommandManager commandManager;
     
     @Override
@@ -47,7 +46,7 @@ public class BarsOfAction extends JavaPlugin {
         config = new Config(new File(absolutePath + "/config.yml"), "config.yml");
         fileManager = new FileManager();
         recentsHandler = new SaveRecentsHandler();
-        cooldownHandler = new CooldownHandler();
+//        cooldownHandler = new CooldownHandler();
         commandManager = new CommandManager();
         
         String prefix = Objects.requireNonNull(config.getString("prefix"));

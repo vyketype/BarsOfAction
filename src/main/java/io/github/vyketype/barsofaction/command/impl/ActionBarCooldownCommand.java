@@ -1,22 +1,13 @@
 package io.github.vyketype.barsofaction.command.impl;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandHelp;
-import co.aikar.commands.annotation.*;
-import io.github.vyketype.barsofaction.BarsOfAction;
-import io.github.vyketype.barsofaction.util.ErrorUtil;
-import io.github.vyketype.barsofaction.util.Permission;
-import org.apache.commons.lang3.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Subcommand;
 
 @CommandAlias("actionbar|ab")
 @Subcommand("cooldown")
 public class ActionBarCooldownCommand extends BaseCommand {
+    /*
     private static final BarsOfAction INSTANCE = BarsOfAction.getINSTANCE();
     
     @HelpCommand
@@ -141,4 +132,5 @@ public class ActionBarCooldownCommand extends BaseCommand {
             }
         }
     }
+     */
 }
