@@ -19,24 +19,23 @@ import java.util.Objects;
  * https://github.com/dynmie/
  */
 public class Config extends YamlConfiguration {
-    private final BarsOfAction plugin;
+    private static final BarsOfAction INSTANCE = BarsOfAction.getINSTANCE();
     
     private final File file;
     private final String localDefaultsName;
     
-    public Config(BarsOfAction plugin, File file, String localDefaultsName) {
-        this.plugin = plugin;
+    public Config(File file, String localDefaultsName) {
         this.file = file;
         this.localDefaultsName = localDefaultsName;
         try {
-            Reader stream = new InputStreamReader(Objects.requireNonNull(plugin.getResource(localDefaultsName)),
+            Reader stream = new InputStreamReader(Objects.requireNonNull(INSTANCE.getResource(localDefaultsName)),
                     StandardCharsets.UTF_8);
             YamlConfiguration config = new YamlConfiguration();
             config.load(stream);
             this.setDefaults(config);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-            plugin.getLogger().warning("Failed to load defaults for " + file.getName() + ".");
+            INSTANCE.getLogger().warning("Failed to load defaults for " + file.getName() + ".");
         }
         createIfNotExists();
     }
@@ -49,7 +48,7 @@ public class Config extends YamlConfiguration {
             super.save(file);
         } catch (IOException e) {
             e.printStackTrace();
-            plugin.getLogger().warning("Failed to save file " + file.getName() + ".");
+            INSTANCE.getLogger().warning("Failed to save file " + file.getName() + ".");
         }
     }
     
@@ -61,7 +60,7 @@ public class Config extends YamlConfiguration {
             super.load(file);
         } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
-            plugin.getLogger().warning("Failed to load file " + file.getName() + ".");
+            INSTANCE.getLogger().warning("Failed to load file " + file.getName() + ".");
         }
     }
     
@@ -80,10 +79,10 @@ public class Config extends YamlConfiguration {
         }
         
         try {
-            FileUtils.copyInputStreamToFile(Objects.requireNonNull(plugin.getResource(localDefaultsName)), file);
+            FileUtils.copyInputStreamToFile(Objects.requireNonNull(INSTANCE.getResource(localDefaultsName)), file);
         } catch (IOException e) {
             e.printStackTrace();
-            plugin.getLogger().warning("Failed to create " + file.getName() + ".");
+            INSTANCE.getLogger().warning("Failed to create " + file.getName() + ".");
         }
     }
 }

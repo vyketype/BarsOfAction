@@ -17,11 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @CommandAlias("actionbar|ab")
 @Subcommand("cooldown")
 public class ActionBarCooldownCommand extends BaseCommand {
-    private final BarsOfAction plugin;
-    
-    public ActionBarCooldownCommand(BarsOfAction plugin) {
-        this.plugin = plugin;
-    }
+    private static final BarsOfAction INSTANCE = BarsOfAction.getINSTANCE();
     
     @HelpCommand
     @Default
@@ -41,7 +37,7 @@ public class ActionBarCooldownCommand extends BaseCommand {
             
             OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(targetName);
             
-            @Nullable Integer playerSeconds = plugin.getCooldownHandler().getPlayerCooldowns().get(offlineTarget.getUniqueId());
+            @Nullable Integer playerSeconds = INSTANCE.getCooldownHandler().getPlayerCooldowns().get(offlineTarget.getUniqueId());
             if (playerSeconds == null) {
                 ErrorUtil.error(player, "This player does not have any ActionBar cooldowns!");
                 return;
@@ -52,13 +48,13 @@ public class ActionBarCooldownCommand extends BaseCommand {
         }
         
         String globalCooldown = ChatColor.GREEN + "none";
-        int globalSeconds = plugin.getCooldownHandler().getPublicCooldownSeconds();
+        int globalSeconds = INSTANCE.getCooldownHandler().getPublicCooldownSeconds();
         if (globalSeconds > 0) {
             globalCooldown = ChatColor.RED + "" + globalSeconds + " seconds";
         }
         
         String playerCooldown = ChatColor.GREEN + "none";
-        @Nullable Integer playerSeconds = plugin.getCooldownHandler().getPlayerCooldowns().get(player.getUniqueId());
+        @Nullable Integer playerSeconds = INSTANCE.getCooldownHandler().getPlayerCooldowns().get(player.getUniqueId());
         if (playerSeconds != null) {
             playerCooldown = ChatColor.RED + "" + playerSeconds + " seconds";
         }
@@ -103,7 +99,7 @@ public class ActionBarCooldownCommand extends BaseCommand {
     }
     
     private void handleGlobalCooldown(CommandSender sender, int seconds) {
-        plugin.getCooldownHandler().setPublicCooldownSeconds(seconds);
+        INSTANCE.getCooldownHandler().setPublicCooldownSeconds(seconds);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (seconds <= 0) {
                 onlinePlayer.sendMessage(BarsOfAction.NAMESPACE + "The global ActionBar cooldown has " +
@@ -122,7 +118,7 @@ public class ActionBarCooldownCommand extends BaseCommand {
     private void handlePlayerCooldown(CommandSender sender, OfflinePlayer offlineTarget, int seconds) {
         String targetName = offlineTarget.getName();
         if (seconds <= 0) {
-            plugin.getCooldownHandler().getPlayerCooldowns().remove(offlineTarget.getUniqueId());
+            INSTANCE.getCooldownHandler().getPlayerCooldowns().remove(offlineTarget.getUniqueId());
             sender.sendMessage(BarsOfAction.NAMESPACE + "The ActionBar cooldown for " + ChatColor.LIGHT_PURPLE +
                     targetName + ChatColor.GRAY + " was " + ChatColor.GREEN + "removed" + ChatColor.GRAY + ".");
             if (offlineTarget.isOnline()) {
@@ -132,7 +128,7 @@ public class ActionBarCooldownCommand extends BaseCommand {
                 target.playSound(target.getLocation(), "block.note_block.bass", 1, 1F);
             }
         } else {
-            plugin.getCooldownHandler().getPlayerCooldowns().put(offlineTarget.getUniqueId(), seconds);
+            INSTANCE.getCooldownHandler().getPlayerCooldowns().put(offlineTarget.getUniqueId(), seconds);
             sender.sendMessage(BarsOfAction.NAMESPACE + "You placed an ActionBar " + ChatColor.RED +
                     "cooldown " + ChatColor.GRAY + "on " + ChatColor.LIGHT_PURPLE + targetName + " for " +
                     ChatColor.GOLD + seconds + " seconds" + ChatColor.GRAY + ".");

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
  */
 public class ErrorUtil {
     /**
-     * Sends an error message to a player and plays a sound.
+     * Sends an error message to a player and plays a sound if the player is online.
      *
      * @param sender  The player to send the message.
      * @param message The message to send.

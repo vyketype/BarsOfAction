@@ -2,12 +2,9 @@ package io.github.vyketype.barsofaction.data;
 
 import io.github.vyketype.barsofaction.BarsOfAction;
 import io.github.vyketype.barsofaction.util.ErrorUtil;
-import io.github.vyketype.barsofaction.util.Permission;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -21,7 +18,9 @@ import java.util.UUID;
  *
  * @author vyketype
  */
-public record ActionBar(BarsOfAction plugin, UUID creator, String name, String content) {
+public record ActionBar(UUID creator, String name, String content) {
+    private static final BarsOfAction INSTANCE = BarsOfAction.getINSTANCE();
+    
     /**
      * Sends the ActionBar to a player with a sound.
      *
@@ -30,9 +29,11 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
      * @param pitch  The pitch to play the sound.
      * @param prefix If the ActionBar prefix should be included.
      */
-    public void send(Player player, String sound, float pitch, boolean prefix) {
+    private void send(Player player, String sound, float pitch, boolean prefix) {
         send(player, prefix);
-        player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 1, pitch);
+        if (!Objects.equals(sound, "")) {
+            player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), 1, pitch);
+        }
     }
     
     /**
@@ -41,52 +42,52 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
      * @param player The player to whom the ActionBar should be sent.
      * @param prefix If the ActionBar prefix should be included.
      */
-    public void send(Player player, boolean prefix) {
-        String prefixText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
+    private void send(Player player, boolean prefix) {
+        String prefixText = ChatColor.translateAlternateColorCodes('&', INSTANCE.getConfig().getString("prefix"));
         if (!prefix) {
             prefixText = "";
         }
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(prefixText + content));
     }
     
-    public void handleSending(Player player, String sound, float pitch, @Nullable Player target, boolean prefix) {
-        // SEND TO CONSOLE
-        if (plugin.getConfig().getBoolean("sendToConsole")) {
-            String prefixText = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
-            if (!prefix) {
-                prefixText = "";
-            }
-            plugin.getLogger().info("ActionBar message by " + player.getName() + " : " + prefixText + content);
-        }
+    public void handleSending(Player player, SoundInformation soundInfo, boolean prefix, @Nullable Player target) {
+        sendToConsole(player, prefix);
         
-        // ADD TO HANDLER
-        plugin.getRecentsHandler().getRecents().put(player.getUniqueId(), content);
+        // Add to handler
+        INSTANCE.getRecentsHandler().getRecents().put(player.getUniqueId(), content);
         
-        // IF TARGET IS NULL, DO BROADCAST, ELSE, SEND TO INDIVIDUAL
+        // Get sound information
+        String sound = soundInfo.sound();
+        float pitch = soundInfo.pitch();
+        
+        // If target is null, broadcast ActionBar, otherwise send it to target
         if (target == null) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (Objects.equals(sound, "")) {
-                    send(player, prefix);
-                } else {
-                    send(p, sound, pitch, prefix);
-                }
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                send(onlinePlayer, sound, pitch, prefix);
             }
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully broadcast" + ChatColor.GRAY + ".");
         } else {
-            if (Objects.equals(sound, "")) {
-                send(player, prefix);
-            } else {
-                send(target, sound, pitch, prefix);
-            }
+            send(target, sound, pitch, prefix);
             player.sendMessage(BarsOfAction.NAMESPACE + ChatColor.GRAY + "ActionBar message " + ChatColor.GREEN +
                     "successfully sent" + ChatColor.GRAY + ".");
         }
     }
     
+    private void sendToConsole(Player player, boolean prefix) {
+        if (INSTANCE.getConfig().getBoolean("sendToConsole")) {
+            String prefixText = ChatColor.translateAlternateColorCodes('&', INSTANCE.getConfig().getString("prefix"));
+            if (!prefix) {
+                prefixText = "";
+            }
+            INSTANCE.getLogger().info("ActionBar message by " + player.getName() + ": " + prefixText + content);
+        }
+    }
+    
     @Override
     public String toString() {
-        // > template : by vPrototype_
+        // TODO: Rework this at some point
+        // > template : by vyketype
         return ChatColor.DARK_GRAY + "› " + ChatColor.LIGHT_PURPLE + name + ChatColor.WHITE + " : by " +
                 ChatColor.GRAY + Bukkit.getOfflinePlayer(creator).getName();
     }
@@ -109,100 +110,5 @@ public record ActionBar(BarsOfAction plugin, UUID creator, String name, String c
         }
         
         return true;
-    }
-    
-    public static void register(BarsOfAction plugin, Player sender, String strArgs, @Nullable Player target) {
-        String[] args = StringUtils.split(strArgs, " ", -1);
-        
-        String content;
-        @Nullable String sound = "";
-        float pitch = 1F;
-        boolean get = false;
-        boolean prefix = true;
-        
-        // -GET ARGUMENT
-        if (args[0].equalsIgnoreCase("-get")) {
-            String name = args[1];
-            @Nullable ActionBar bar = plugin.getFileManager().getBar(name);
-            
-            if (bar == null) {
-                ErrorUtil.error(sender, "No such ActionBar exists!");
-                return;
-            }
-            
-            content = bar.content();
-            get = true;
-        } else {
-            content = strArgs;
-        }
-        
-        // -SOUND ARGUMENT
-        if (args.length > 2) {
-            if (args[args.length - 2].equalsIgnoreCase("-sound") || args[args.length - 3].equalsIgnoreCase(
-                    "-sound")) {
-                // CHECK PERMISSION
-                if (!sender.hasPermission(Permission.ACTIONBAR_SOUND.getName())) {
-                    ErrorUtil.error(sender, "You do not have the permission to send sounds with ActionBar " +
-                            "messages!");
-                    return;
-                }
-                
-                // CHECKING FOR A PITCH ARGUMENT
-                if (args[args.length - 2].equalsIgnoreCase("-sound")) {
-                    sound = args[args.length - 1].toUpperCase().replace('.', '_');
-                    if (!get) {
-                        content = StringUtils.join(args, " ", 0, args.length - 2);
-                    }
-                } else if (args[args.length - 3].equalsIgnoreCase("-sound")) {
-                    sound = args[args.length - 2].toUpperCase().replace('.', '_');
-                    if (!get) {
-                        content = StringUtils.join(args, " ", 0, args.length - 2);
-                    }
-                    
-                    try {
-                        Double.parseDouble(args[args.length - 1]);
-                    } catch (NumberFormatException badNumber) {
-                        ErrorUtil.error(sender, "This is not a decimal number!");
-                    }
-                    
-                    pitch = Float.parseFloat(args[args.length - 1]);
-                }
-                
-                // CHECKS IF THE SOUND EXISTS
-                try {
-                    Sound.valueOf(sound);
-                } catch (IllegalArgumentException noSound) {
-                    ErrorUtil.error(sender, "No such sound exists in the Minecraft files!");
-                    return;
-                }
-            }
-        }
-        
-        // -NOPREFIX ARGUMENT
-        if (args[args.length - 1].equalsIgnoreCase("-noprefix")) {
-            if (!sender.hasPermission(Permission.ACTIONBAR_NOPREFIX.getName())) {
-                ErrorUtil.error(sender, "You do not have the permission to send ActionBars without their " +
-                        "prefix!");
-                return;
-            }
-            
-            prefix = false;
-            content = content.substring(0, content.lastIndexOf(" "));
-        }
-        
-        // ESCAPE SEQUENCES
-        if (content.contains("\\-sound") || content.contains("\\-get")) {
-            content = content.replace("\\-sound", "-sound");
-            content = content.replace("\\-get", "-get");
-            content = content.replace("\\-noprefix", "-noprefix");
-        }
-        
-        ActionBar actionBar = new ActionBar(
-                plugin,
-                sender.getUniqueId(),
-                RandomStringUtils.randomAlphanumeric(9),
-                ChatColor.translateAlternateColorCodes('&', content)
-        );
-        actionBar.handleSending(sender, sound, pitch, target, prefix);
     }
 }

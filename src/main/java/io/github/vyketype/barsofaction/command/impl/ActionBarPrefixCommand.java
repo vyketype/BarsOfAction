@@ -14,11 +14,7 @@ import java.util.Objects;
 @CommandAlias("actionbar|ab")
 @Subcommand("prefix")
 public class ActionBarPrefixCommand extends BaseCommand {
-    private final BarsOfAction plugin;
-    
-    public ActionBarPrefixCommand(BarsOfAction plugin) {
-        this.plugin = plugin;
-    }
+    private static final BarsOfAction INSTANCE = BarsOfAction.getINSTANCE();
     
     @HelpCommand
     @Default
@@ -34,7 +30,7 @@ public class ActionBarPrefixCommand extends BaseCommand {
             return;
         }
         
-        String prefix = plugin.getConfig().getString("prefix");
+        String prefix = INSTANCE.getConfig().getString("prefix");
         if (Objects.equals(prefix, "")) {
             sender.sendMessage(BarsOfAction.NAMESPACE + "Currently, there is no ActionBar " + ChatColor.RED +
                     "prefix" + ChatColor.GRAY + ".");
@@ -53,15 +49,16 @@ public class ActionBarPrefixCommand extends BaseCommand {
             return;
         }
         
-        int charLimit = plugin.getConfig().getInt("prefixCharLimit");
+        int charLimit = INSTANCE.getConfig().getInt("prefixCharLimit");
         if (text.length() > charLimit) {
             ErrorUtil.error(sender, "This prefix is too long! Prefix character limit: " + charLimit + ".");
             return;
         }
         
-        plugin.getFileManager().setPrefix(text);
+        String prefix = text.replace("\"", "");
+        INSTANCE.getFileManager().setPrefix(prefix);
         sender.sendMessage(BarsOfAction.NAMESPACE + "Set " + ChatColor.GREEN + "prefix " + ChatColor.GRAY + "to " +
-                ChatColor.LIGHT_PURPLE + "\"" + text + "\"" + ChatColor.GRAY + ".");
+                ChatColor.LIGHT_PURPLE + "\"" + prefix + "\"" + ChatColor.GRAY + ".");
     }
     
     @Subcommand("remove")
@@ -72,7 +69,7 @@ public class ActionBarPrefixCommand extends BaseCommand {
             return;
         }
         
-        plugin.getFileManager().setPrefix("");
+        INSTANCE.getFileManager().setPrefix("");
         sender.sendMessage(BarsOfAction.NAMESPACE + ChatColor.RED + "Removed " + ChatColor.GRAY + "the ActionBar " +
                 "prefix.");
     }

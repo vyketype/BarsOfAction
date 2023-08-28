@@ -7,19 +7,18 @@ import io.github.vyketype.barsofaction.command.impl.ActionBarCooldownCommand;
 import io.github.vyketype.barsofaction.command.impl.ActionBarPrefixCommand;
 
 public class CommandManager {
-    private final BarsOfAction plugin;
+    private static final BarsOfAction INSTANCE = BarsOfAction.getINSTANCE();
     
-    public CommandManager(BarsOfAction plugin) {
-        this.plugin = plugin;
+    public CommandManager() {
         init();
     }
     
     public void init() {
-        BukkitCommandManager bcm = new BukkitCommandManager(plugin);
+        BukkitCommandManager bcm = new BukkitCommandManager(INSTANCE);
         
-        bcm.registerCommand(new ActionBarCommand(plugin));
-        bcm.registerCommand(new ActionBarPrefixCommand(plugin));
-        bcm.registerCommand(new ActionBarCooldownCommand(plugin));
+        bcm.registerCommand(new ActionBarCommand());
+        bcm.registerCommand(new ActionBarPrefixCommand());
+        bcm.registerCommand(new ActionBarCooldownCommand());
         
         bcm.enableUnstableAPI("help");
         bcm.enableUnstableAPI("brigadier");
